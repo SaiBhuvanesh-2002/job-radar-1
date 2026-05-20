@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# Local secrets / state
+.env
+seen_jobs.db
+seen_jobs.db-journal
+
+# Editor
+.idea/
+.vscode/
+.DS_Store
+
+.claude

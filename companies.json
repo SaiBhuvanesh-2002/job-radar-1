@@ -1,0 +1,357 @@
+[
+  {
+    "name": "Modal",
+    "ats": "ashby",
+    "slug": "modal"
+  },
+  {
+    "name": "OpenAI",
+    "ats": "ashby",
+    "slug": "openai"
+  },
+  {
+    "name": "Anthropic",
+    "ats": "greenhouse",
+    "slug": "anthropic"
+  },
+  {
+    "name": "PolyAI",
+    "ats": "greenhouse",
+    "slug": "polyai"
+  },
+  {
+    "name": "Intercom",
+    "ats": "greenhouse",
+    "slug": "intercom"
+  },
+  {
+    "name": "Hume AI",
+    "ats": "greenhouse",
+    "slug": "humeai"
+  },
+  {
+    "name": "ElevenLabs",
+    "ats": "ashby",
+    "slug": "elevenlabs"
+  },
+  {
+    "name": "Deepgram",
+    "ats": "ashby",
+    "slug": "deepgram"
+  },
+  {
+    "name": "Vapi",
+    "ats": "ashby",
+    "slug": "vapi"
+  },
+  {
+    "name": "Bland AI",
+    "ats": "ashby",
+    "slug": "bland"
+  },
+  {
+    "name": "Airtable",
+    "ats": "greenhouse",
+    "slug": "airtable"
+  },
+  {
+    "name": "Vercel",
+    "ats": "greenhouse",
+    "slug": "vercel"
+  },
+  {
+    "name": "Arize AI",
+    "ats": "greenhouse",
+    "slug": "arizeai"
+  },
+  {
+    "name": "RunPod",
+    "ats": "greenhouse",
+    "slug": "runpod"
+  },
+  {
+    "name": "Weights & Biases",
+    "ats": "greenhouse",
+    "slug": "coreweave"
+  },
+  {
+    "name": "Glean",
+    "ats": "greenhouse",
+    "slug": "gleanwork"
+  },
+  {
+    "name": "Sierra",
+    "ats": "ashby",
+    "slug": "sierra"
+  },
+  {
+    "name": "Decagon",
+    "ats": "ashby",
+    "slug": "decagon"
+  },
+  {
+    "name": "Lindy",
+    "ats": "ashby",
+    "slug": "lindy"
+  },
+  {
+    "name": "n8n",
+    "ats": "ashby",
+    "slug": "n8n"
+  },
+  {
+    "name": "Zapier",
+    "ats": "ashby",
+    "slug": "zapier"
+  },
+  {
+    "name": "Boomi",
+    "ats": "greenhouse",
+    "slug": "boomilp"
+  },
+  {
+    "name": "Cohere",
+    "ats": "ashby",
+    "slug": "cohere"
+  },
+  {
+    "name": "LangChain",
+    "ats": "ashby",
+    "slug": "langchain"
+  },
+  {
+    "name": "Pinecone",
+    "ats": "ashby",
+    "slug": "pinecone"
+  },
+  {
+    "name": "Mistral AI",
+    "ats": "lever",
+    "slug": "mistral"
+  },
+  {
+    "name": "Palantir",
+    "ats": "lever",
+    "slug": "palantir"
+  },
+  {
+    "name": "Later",
+    "ats": "greenhouse",
+    "slug": "later"
+  },
+  {
+    "name": "Safari AI",
+    "ats": "greenhouse",
+    "slug": "safariai"
+  },
+  {
+    "name": "Hootsuite",
+    "ats": "greenhouse",
+    "slug": "hootsuite"
+  },
+  {
+    "name": "Klue",
+    "ats": "ashby",
+    "slug": "klue"
+  },
+  {
+    "name": "Glacis AI",
+    "ats": "ashby",
+    "slug": "glacis-ai"
+  },
+  {
+    "name": "Attio",
+    "ats": "ashby",
+    "slug": "attio"
+  },
+  {
+    "name": "Black Forest Labs",
+    "ats": "greenhouse",
+    "slug": "blackforestlabs"
+  },
+  {
+    "name": "Contentful",
+    "ats": "greenhouse",
+    "slug": "contentful"
+  },
+  {
+    "name": "GetYourGuide",
+    "ats": "greenhouse",
+    "slug": "getyourguide"
+  },
+  {
+    "name": "HelloFresh",
+    "ats": "greenhouse",
+    "slug": "hellofresh"
+  },
+  {
+    "name": "N26",
+    "ats": "greenhouse",
+    "slug": "n26"
+  },
+  {
+    "name": "Trade Republic",
+    "ats": "greenhouse",
+    "slug": "traderepublicbank"
+  },
+  {
+    "name": "SumUp",
+    "ats": "greenhouse",
+    "slug": "sumup"
+  },
+  {
+    "name": "Scandit",
+    "ats": "greenhouse",
+    "slug": "scandit"
+  },
+  {
+    "name": "Cradle",
+    "ats": "ashby",
+    "slug": "cradlebio"
+  },
+  {
+    "name": "Photoroom",
+    "ats": "ashby",
+    "slug": "photoroom"
+  },
+  {
+    "name": "Stability AI",
+    "ats": "greenhouse",
+    "slug": "stabilityai"
+  },
+  {
+    "name": "Lovable",
+    "ats": "ashby",
+    "slug": "lovable"
+  },
+  {
+    "name": "Spotify",
+    "ats": "lever",
+    "slug": "spotify"
+  },
+  {
+    "name": "Amplemarket",
+    "ats": "greenhouse",
+    "slug": "amplemarket"
+  },
+  {
+    "name": "Perplexity",
+    "ats": "ashby",
+    "slug": "perplexity"
+  },
+  {
+    "name": "Clay Labs",
+    "ats": "ashby",
+    "slug": "claylabs"
+  },
+  {
+    "name": "Hightouch",
+    "ats": "greenhouse",
+    "slug": "hightouch"
+  },
+  {
+    "name": "WorkOS",
+    "ats": "ashby",
+    "slug": "workos"
+  },
+  {
+    "name": "Supabase",
+    "ats": "ashby",
+    "slug": "supabase"
+  },
+  {
+    "name": "Resend",
+    "ats": "ashby",
+    "slug": "resend"
+  },
+  {
+    "name": "Clerk",
+    "ats": "ashby",
+    "slug": "clerk"
+  },
+  {
+    "name": "Inngest",
+    "ats": "ashby",
+    "slug": "inngest"
+  },
+  {
+    "name": "PlanetScale",
+    "ats": "greenhouse",
+    "slug": "planetscale"
+  },
+  {
+    "name": "Databricks",
+    "ats": "greenhouse",
+    "slug": "databricks"
+  },
+  {
+    "name": "Observe.AI",
+    "ats": "greenhouse",
+    "slug": "observeai"
+  },
+  {
+    "name": "Snowflake",
+    "ats": "ashby",
+    "slug": "snowflake"
+  },
+  {
+    "name": "AlphaSense",
+    "ats": "greenhouse",
+    "slug": "alphasense"
+  },
+  {
+    "name": "Affirm",
+    "ats": "greenhouse",
+    "slug": "affirm"
+  },
+  {
+    "name": "Cresta",
+    "ats": "greenhouse",
+    "slug": "cresta"
+  },
+  {
+    "name": "Datadog",
+    "ats": "greenhouse",
+    "slug": "datadog"
+  },
+  {
+    "name": "Stripe",
+    "ats": "greenhouse",
+    "slug": "stripe"
+  },
+  {
+    "name": "Harvey",
+    "ats": "ashby",
+    "slug": "harvey"
+  },
+  {
+    "name": "Vanta",
+    "ats": "ashby",
+    "slug": "vanta"
+  },
+  {
+    "name": "Writer",
+    "ats": "ashby",
+    "slug": "writer"
+  },
+  {
+    "name": "Abridge",
+    "ats": "ashby",
+    "slug": "abridge"
+  },
+  {
+    "name": "Scale AI",
+    "ats": "greenhouse",
+    "slug": "scaleai"
+  },
+  {
+    "name": "Twilio",
+    "ats": "greenhouse",
+    "slug": "twilio"
+  },
+  {
+    "name": "Smartsheet",
+    "ats": "greenhouse",
+    "slug": "smartsheet"
+  }
+]

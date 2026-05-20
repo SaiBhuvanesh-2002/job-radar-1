@@ -1,0 +1,14 @@
+{
+  "jobs": [
+    {
+      "id": 4567890,
+      "title": "ML Platform Engineer",
+      "absolute_url": "https://boards.greenhouse.io/example/jobs/4567890",
+      "location": { "name": "Remote - US" },
+      "departments": [ { "id": 1, "name": "ML Infrastructure" } ],
+      "content": "Own the inference platform serving millions of requests.",
+      "updated_at": "2026-05-10T18:23:45-07:00",
+      "first_published": "2026-05-09T12:00:00-07:00"
+    }
+  ]
+}

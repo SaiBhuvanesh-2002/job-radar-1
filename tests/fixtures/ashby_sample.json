@@ -1,0 +1,20 @@
+{
+  "jobs": [
+    {
+      "id": "ashby-job-uuid-001",
+      "title": "Applied AI Engineer (LLM)",
+      "department": "Research",
+      "team": "Research Engineering",
+      "employmentType": "FullTime",
+      "location": "Remote (Americas)",
+      "isListed": true,
+      "isRemote": true,
+      "publishedAt": "2026-05-12T09:00:00.000+00:00",
+      "jobUrl": "https://jobs.ashbyhq.com/example/ashby-job-uuid-001",
+      "applyUrl": "https://jobs.ashbyhq.com/example/ashby-job-uuid-001/application",
+      "descriptionPlain": "Ship RAG and agentic systems to production.",
+      "descriptionHtml": "<p>Ship RAG and agentic systems to production.</p>"
+    }
+  ],
+  "apiVersion": "1"
+}

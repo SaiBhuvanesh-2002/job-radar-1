@@ -1,0 +1,15 @@
+[
+  {
+    "id": "abc123-lever-id",
+    "text": "Senior AI Engineer",
+    "categories": {
+      "team": "Applied AI",
+      "department": "Engineering",
+      "location": "San Francisco / Remote",
+      "commitment": "Full-time"
+    },
+    "descriptionPlain": "Build production LLM inference systems at scale.",
+    "hostedUrl": "https://jobs.lever.co/example/abc123-lever-id",
+    "createdAt": 1736899200000
+  }
+]

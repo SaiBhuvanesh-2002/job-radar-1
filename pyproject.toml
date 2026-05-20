@@ -1,0 +1,24 @@
+[project]
+name = "job-radar"
+version = "0.1.0"
+description = "Poll ATS feeds, dedup, and email a digest of new job postings."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "requests>=2.32",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
+
+[project.scripts]
+job-radar = "job_monitor:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.setuptools]
+py-modules = ["ats_feed", "dedup", "alerts", "job_monitor", "verify_companies", "scorer"]

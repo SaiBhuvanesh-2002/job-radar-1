@@ -1,0 +1,85 @@
+name: Job Monitor
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # every 30 minutes (best-effort; GH delays during load)
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode: normal | dry-run | seed"
+        required: false
+        default: "normal"
+        type: choice
+        options:
+          - normal
+          - dry-run
+          - seed
+
+concurrency:
+  group: job-monitor
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GMAIL_USER: ${{ secrets.GMAIL_USER }}
+      GMAIL_APP_PASS: ${{ secrets.GMAIL_APP_PASS }}
+      GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+
+      # Rolling-key cache: write a unique key each run so the cache is always
+      # saved; restore-keys matches the most recent prior key prefix. Cache is
+      # best-effort — the timestamp filter in job_monitor.py is the safety net.
+      - name: Restore dedup cache
+        id: cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: seen_jobs.db
+          key: seen-jobs-db-${{ github.run_id }}
+          restore-keys: |
+            seen-jobs-db-
+
+      - name: Run pipeline
+        id: pipeline
+        run: |
+          case "${{ github.event.inputs.mode }}" in
+            dry-run) python job_monitor.py --dry-run ;;
+            seed)    python job_monitor.py --seed ;;
+            *)       python job_monitor.py ;;
+          esac
+
+      - name: Save dedup cache
+        if: always() && steps.pipeline.outcome != 'skipped'
+        uses: actions/cache/save@v4
+        with:
+          path: seen_jobs.db
+          key: seen-jobs-db-${{ github.run_id }}
+
+      - name: Notify on failure
+        if: failure()
+        env:
+          PIPELINE_OUTCOME: ${{ steps.pipeline.outcome }}
+        run: |
+          python - <<'PY'
+          import os
+          from alerts import send_failure
+          send_failure(
+              f"workflow step failed (pipeline outcome: {os.environ.get('PIPELINE_OUTCOME')})",
+              os.environ.get("GITHUB_RUN_URL"),
+          )
+          PY
