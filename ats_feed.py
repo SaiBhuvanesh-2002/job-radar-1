@@ -1,7 +1,8 @@
-"""Fetch + normalize job postings from Lever, Greenhouse, and Ashby."""
+"""Fetch + normalize job postings from Lever, Greenhouse, Ashby, and Workday."""
 from __future__ import annotations
 
 import logging
+import re
 import time
 from datetime import datetime, timezone
 from typing import Any, Callable, TypedDict
@@ -84,10 +85,57 @@ def fetch_ashby(slug: str) -> list[dict[str, Any]]:
     return [{"_ats": "ashby", "_company": slug, **j} for j in jobs]
 
 
+_WORKDAY_URL_RE = re.compile(
+    r"https?://([^.]+)\.(wd\d+)\.myworkdayjobs\.com/([^/?#]+)", re.IGNORECASE
+)
+
+
+def fetch_workday(careers_url: str) -> list[dict[str, Any]]:
+    """Workday CXS frontend API — paginated POST.
+
+    careers_url format: https://{tenant}.{wdserver}.myworkdayjobs.com/{board}
+    e.g.  https://roche.wd3.myworkdayjobs.com/roche-ext
+    """
+    m = _WORKDAY_URL_RE.match(careers_url)
+    if not m:
+        raise ValueError(f"workday: cannot parse careers URL: {careers_url!r}")
+    tenant, wdserver, board = m.group(1), m.group(2), m.group(3)
+    base_url = f"https://{tenant}.{wdserver}.myworkdayjobs.com"
+    api_url = f"{base_url}/wday/cxs/{tenant}/{board}/jobs"
+
+    all_postings: list[dict[str, Any]] = []
+    offset = 0
+    limit = 50
+
+    while True:
+        r = SESSION.post(
+            api_url,
+            json={"appliedFacets": {}, "limit": limit, "offset": offset, "searchText": ""},
+            timeout=REQUEST_TIMEOUT,
+        )
+        log.info("workday/%s/%s -> %s (%d bytes)", tenant, board, r.status_code, len(r.content))
+        r.raise_for_status()
+        data = r.json()
+        postings = data.get("jobPostings") or []
+        if not postings:
+            break
+        for p in postings:
+            p["_ats"] = "workday"
+            p["_company"] = tenant
+            p["_base_url"] = base_url
+        all_postings.extend(postings)
+        offset += len(postings)
+        if offset >= (data.get("total") or 0):
+            break
+
+    return all_postings
+
+
 ATS_FETCHERS: dict[str, Callable[[str], list[dict[str, Any]]]] = {
     "lever": fetch_lever,
     "greenhouse": fetch_greenhouse,
     "ashby": fetch_ashby,
+    "workday": fetch_workday,
 }
 
 
@@ -95,13 +143,15 @@ def fetch_all_jobs(companies: list[dict[str, str]]) -> list[dict[str, Any]]:
     all_jobs: list[dict[str, Any]] = []
     for entry in companies:
         ats = entry["ats"]
-        slug = entry["slug"]
+        # Workday entries use careers_url; all others use slug.
+        arg = entry.get("careers_url") if ats == "workday" else entry.get("slug", "")
+        label = entry.get("name") or arg
         try:
-            jobs = ATS_FETCHERS[ats](slug)
+            jobs = ATS_FETCHERS[ats](arg)
             all_jobs.extend(jobs)
-            log.info("  %s/%s fetched %d jobs", ats, slug, len(jobs))
+            log.info("  %s/%s fetched %d jobs", ats, label, len(jobs))
         except Exception as e:
-            log.warning("  [fetch fail] %s/%s: %s", ats, slug, e)
+            log.warning("  [fetch fail] %s/%s: %s", ats, label, e)
         time.sleep(0.5)
     return all_jobs
 
@@ -160,6 +210,25 @@ def normalize_job(raw: dict[str, Any]) -> Job | None:
                 url=raw.get("jobUrl") or raw.get("applyUrl", ""),
                 remote=bool(raw.get("isRemote")) or "remote" in location.lower(),
                 posted_at=raw.get("publishedAt"),
+            )
+        if ats == "workday":
+            # CXS listings API: no posted_at, no description at listing level.
+            # externalPath is the stable identifier and full URL path suffix.
+            external_path = raw.get("externalPath", "")
+            base_url = raw.get("_base_url", "")
+            location = raw.get("locationsText") or ""
+            job_url = f"{base_url}/{external_path.lstrip('/')}" if external_path else ""
+            return Job(
+                id=external_path,
+                ats="workday",
+                company=company_slug,
+                title=raw.get("title", ""),
+                location=location,
+                team="",
+                description="",
+                url=job_url,
+                remote="remote" in location.lower(),
+                posted_at=None,
             )
         log.warning("unknown ats: %s", ats)
         return None

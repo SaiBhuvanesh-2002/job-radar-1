@@ -353,5 +353,15 @@
     "name": "Smartsheet",
     "ats": "greenhouse",
     "slug": "smartsheet"
+  },
+  {
+    "name": "Roche",
+    "ats": "workday",
+    "careers_url": "https://roche.wd3.myworkdayjobs.com/roche-ext"
+  },
+  {
+    "name": "Genentech",
+    "ats": "workday",
+    "careers_url": "https://gen.wd1.myworkdayjobs.com/careers"
   }
 ]

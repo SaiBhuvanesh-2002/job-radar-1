@@ -80,5 +80,24 @@ def test_missing_id_returns_none():
 
 
 def test_unknown_ats_returns_none():
-    job = normalize_job({"_ats": "workday", "_company": "example"})
+    job = normalize_job({"_ats": "taleo", "_company": "example"})
     assert job is None
+
+
+def test_workday_normalizes():
+    raw = {
+        "_ats": "workday",
+        "_company": "roche",
+        "_base_url": "https://roche.wd3.myworkdayjobs.com",
+        "title": "ML Engineer",
+        "externalPath": "roche-ext/job/South-San-Francisco/ML-Engineer_JR-12345",
+        "locationsText": "South San Francisco, CA, USA",
+    }
+    job = normalize_job(raw)
+    assert job is not None
+    assert job["ats"] == "workday"
+    assert job["title"] == "ML Engineer"
+    assert job["id"] == raw["externalPath"]
+    assert job["url"] == "https://roche.wd3.myworkdayjobs.com/roche-ext/job/South-San-Francisco/ML-Engineer_JR-12345"
+    assert job["location"] == "South San Francisco, CA, USA"
+    assert job["posted_at"] is None
