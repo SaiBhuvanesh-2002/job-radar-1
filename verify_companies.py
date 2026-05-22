@@ -93,8 +93,16 @@ CANDIDATES: list[tuple[str, str, str]] = [
     ("Scale AI", "greenhouse", "scaleai"),
     ("Twilio", "greenhouse", "twilio"),
     ("Smartsheet", "greenhouse", "smartsheet"),
-    # Probed-but-not-found (kept here as breadcrumbs for re-probe attempts):
-    # Tempus AI, Contextual AI, Ironclad, HubSpot, Intuit, Moveworks → likely Workday
+    # Probed-but-not-supported (breadcrumbs — these run on ATSes outside v1's
+    # Lever/Greenhouse/Ashby/Workday set; revisit if we add adapters):
+    # - iCIMS:           Cotiviti, ICE
+    # - SmartRecruiters: Bayer*, Moveworks (now ServiceNow), ServiceNow, Syngenta
+    #                    (*Bayer also runs SAP SuccessFactors)
+    # - SAP SuccessFactors: EY, John Deere, AGCO
+    # - TalentBrew/Avature: Intuit, Cargill, Cox Enterprises, Delta Air Lines
+    # - Eightfold:       Trimble, BCG X (also Phenom)
+    # - Oracle Taleo:    Optum / UnitedHealth
+    # - Custom portals:  Microsoft, Google, Amazon, Elastic, McKinsey QuantumBlack
 ]
 
 

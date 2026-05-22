@@ -4,7 +4,7 @@ from __future__ import annotations
 import logging
 import re
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any, Callable, TypedDict
 
 import requests
@@ -89,6 +89,89 @@ _WORKDAY_URL_RE = re.compile(
     r"https?://([^.]+)\.(wd\d+)\.myworkdayjobs\.com/([^/?#]+)", re.IGNORECASE
 )
 
+# Workday's `locationsText` is unreliable: some tenants (Accenture) leave it
+# empty, others (Roche, Nvidia) report "N Locations" for multi-city postings.
+# We then have to fish the real city out of bulletFields or externalPath, or
+# the location filter passes them all through as "empty location (pass)".
+_WORKDAY_MULTI_LOC_RE = re.compile(r"^\s*\d+\s+locations?\s*$", re.IGNORECASE)
+_WORKDAY_PATH_CITY_RE = re.compile(r"^/job/([^/]+)/", re.IGNORECASE)
+
+# Tenants where Workday's listing is NOT reliably sorted by post date.
+# Empirically verified 2026-05: Accenture returns Today-posted jobs at
+# offsets 1000+ while showing 30+d-old jobs at offset 500, so the
+# date-descending early-stop in fetch_workday would lose fresh roles here.
+_WORKDAY_UNSORTED_TENANTS = frozenset({"accenture"})
+
+# Workday's listing API returns a relative `postedOn` string like
+# "Posted Today", "Posted Yesterday", "Posted 5 Days Ago", "Posted 30+ Days Ago".
+# Day-level resolution only; anything older than 30d is clamped to "30+".
+_WORKDAY_POSTED_DAYS_RE = re.compile(
+    r"^\s*Posted\s+(\d+)(\+)?\s+Days?\s+Ago\s*$", re.IGNORECASE
+)
+
+
+def _parse_workday_posted_on(s: str | None) -> str | None:
+    """Translate Workday's relative `postedOn` string to an ISO UTC datetime.
+
+    Returns None if the string is missing or unparseable. "30+ Days Ago"
+    resolves to 31 days back — older than the 7d recency window in
+    job_monitor, so those listings get dropped at the email stage.
+    """
+    if not s:
+        return None
+    sl = s.strip().lower()
+    now = datetime.now(timezone.utc)
+    if sl == "posted today":
+        return now.isoformat()
+    if sl == "posted yesterday":
+        return (now - timedelta(days=1)).isoformat()
+    m = _WORKDAY_POSTED_DAYS_RE.match(s)
+    if m:
+        days = int(m.group(1))
+        if m.group(2):  # "30+" sentinel — clamp past the recency window.
+            days = max(days, 31)
+        return (now - timedelta(days=days)).isoformat()
+    return None
+
+
+def _workday_page_is_all_stale(postings: list[dict[str, Any]]) -> bool:
+    """True if every posting on the page is `Posted 30+ Days Ago`."""
+    if not postings:
+        return False
+    for p in postings:
+        po = (p.get("postedOn") or "").strip().lower()
+        if po != "posted 30+ days ago":
+            return False
+    return True
+
+
+def _workday_location(raw: dict[str, Any]) -> str:
+    """Best-effort location string for a Workday posting.
+
+    Fallback order: locationsText → bulletFields[1] → externalPath city slug.
+    "Location Negotiable" and "N Locations" placeholders are skipped.
+    """
+    def _usable(s: str | None) -> bool:
+        if not s:
+            return False
+        sl = s.strip().lower()
+        return sl != "location negotiable" and not _WORKDAY_MULTI_LOC_RE.match(sl)
+
+    loc = raw.get("locationsText") or ""
+    if _usable(loc):
+        return loc
+
+    bf = raw.get("bulletFields") or []
+    # bulletFields[0] is always the req ID; the second entry, when present,
+    # is the city for Accenture-style tenants.
+    if len(bf) > 1 and _usable(bf[1]):
+        return bf[1]
+
+    m = _WORKDAY_PATH_CITY_RE.match(raw.get("externalPath") or "")
+    if m:
+        return m.group(1).replace("-", " ")
+    return loc  # may be "" or "N Locations" — caller decides what to do
+
 
 def fetch_workday(careers_url: str) -> list[dict[str, Any]]:
     """Workday CXS frontend API — paginated POST.
@@ -105,7 +188,12 @@ def fetch_workday(careers_url: str) -> list[dict[str, Any]]:
 
     all_postings: list[dict[str, Any]] = []
     offset = 0
-    limit = 50
+    # Workday CXS rejects limit > 20 with HTTP 400 (no error message body).
+    limit = 20
+    # Some tenants (e.g. homedepot) only return `total` on the first page —
+    # later pages report total=0. Capture it once and reuse.
+    total: int | None = None
+    allow_early_stop = tenant.lower() not in _WORKDAY_UNSORTED_TENANTS
 
     while True:
         r = SESSION.post(
@@ -123,9 +211,22 @@ def fetch_workday(careers_url: str) -> list[dict[str, Any]]:
             p["_ats"] = "workday"
             p["_company"] = tenant
             p["_base_url"] = base_url
+            p["_board"] = board
         all_postings.extend(postings)
         offset += len(postings)
-        if offset >= (data.get("total") or 0):
+        if total is None:
+            total = data.get("total") or 0
+        if offset >= total:
+            break
+        # Most Workday tenants sort by post date descending: once we hit a
+        # full page of "Posted 30+ Days Ago" everything past it is older
+        # too, so further pages have no chance of clearing the 7d recency
+        # filter. Skipped for tenants in _WORKDAY_UNSORTED_TENANTS.
+        if allow_early_stop and _workday_page_is_all_stale(postings):
+            log.info(
+                "workday/%s/%s early-stop at offset %d: page entirely 30+d old",
+                tenant, board, offset,
+            )
             break
 
     return all_postings
@@ -213,11 +314,18 @@ def normalize_job(raw: dict[str, Any]) -> Job | None:
             )
         if ats == "workday":
             # CXS listings API: no posted_at, no description at listing level.
-            # externalPath is the stable identifier and full URL path suffix.
+            # externalPath is the stable identifier; full URL is
+            # {base_url}/{board}/{externalPath}. Omitting the board segment
+            # 404s on every tenant we've checked.
             external_path = raw.get("externalPath", "")
             base_url = raw.get("_base_url", "")
-            location = raw.get("locationsText") or ""
-            job_url = f"{base_url}/{external_path.lstrip('/')}" if external_path else ""
+            board = raw.get("_board", "")
+            location = _workday_location(raw)
+            job_url = (
+                f"{base_url}/{board}/{external_path.lstrip('/')}"
+                if external_path and board
+                else ""
+            )
             return Job(
                 id=external_path,
                 ats="workday",
@@ -228,7 +336,7 @@ def normalize_job(raw: dict[str, Any]) -> Job | None:
                 description="",
                 url=job_url,
                 remote="remote" in location.lower(),
-                posted_at=None,
+                posted_at=_parse_workday_posted_on(raw.get("postedOn")),
             )
         log.warning("unknown ats: %s", ats)
         return None

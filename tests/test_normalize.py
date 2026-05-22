@@ -14,7 +14,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from ats_feed import normalize_job  # noqa: E402
+from datetime import datetime, timezone  # noqa: E402
+
+from ats_feed import _parse_workday_posted_on, normalize_job  # noqa: E402
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -89,9 +91,11 @@ def test_workday_normalizes():
         "_ats": "workday",
         "_company": "roche",
         "_base_url": "https://roche.wd3.myworkdayjobs.com",
+        "_board": "roche-ext",
         "title": "ML Engineer",
-        "externalPath": "roche-ext/job/South-San-Francisco/ML-Engineer_JR-12345",
+        "externalPath": "/job/South-San-Francisco/ML-Engineer_JR-12345",
         "locationsText": "South San Francisco, CA, USA",
+        "postedOn": "Posted Today",
     }
     job = normalize_job(raw)
     assert job is not None
@@ -100,4 +104,26 @@ def test_workday_normalizes():
     assert job["id"] == raw["externalPath"]
     assert job["url"] == "https://roche.wd3.myworkdayjobs.com/roche-ext/job/South-San-Francisco/ML-Engineer_JR-12345"
     assert job["location"] == "South San Francisco, CA, USA"
-    assert job["posted_at"] is None
+    assert job["posted_at"] is not None
+
+
+def test_workday_posted_on_parser():
+    now = datetime.now(timezone.utc)
+
+    today = _parse_workday_posted_on("Posted Today")
+    assert today is not None
+    assert (now - datetime.fromisoformat(today)).total_seconds() < 5
+
+    yest = datetime.fromisoformat(_parse_workday_posted_on("Posted Yesterday"))
+    assert 0.9 < (now - yest).total_seconds() / 86400 < 1.1
+
+    five = datetime.fromisoformat(_parse_workday_posted_on("Posted 5 Days Ago"))
+    assert 4.9 < (now - five).total_seconds() / 86400 < 5.1
+
+    # "30+ Days Ago" clamps past the 7d recency window so job_monitor drops it.
+    stale = datetime.fromisoformat(_parse_workday_posted_on("Posted 30+ Days Ago"))
+    assert (now - stale).total_seconds() / 86400 > 30
+
+    assert _parse_workday_posted_on(None) is None
+    assert _parse_workday_posted_on("") is None
+    assert _parse_workday_posted_on("Posted soon") is None

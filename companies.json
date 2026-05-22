@@ -363,5 +363,140 @@
     "name": "Genentech",
     "ats": "workday",
     "careers_url": "https://gen.wd1.myworkdayjobs.com/careers"
+  },
+  {
+    "name": "Home Depot",
+    "ats": "workday",
+    "careers_url": "https://homedepot.wd5.myworkdayjobs.com/CareerDepot"
+  },
+  {
+    "name": "Capital One",
+    "ats": "workday",
+    "careers_url": "https://capitalone.wd12.myworkdayjobs.com/Capital_One"
+  },
+  {
+    "name": "Salesforce",
+    "ats": "workday",
+    "careers_url": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site"
+  },
+  {
+    "name": "Deloitte",
+    "ats": "workday",
+    "careers_url": "https://deloitteie.wd3.myworkdayjobs.com/experienced_professionals"
+  },
+  {
+    "name": "Palo Alto Networks",
+    "ats": "workday",
+    "careers_url": "https://paloaltonetworks.wd5.myworkdayjobs.com/PANWExternalCareers"
+  },
+  {
+    "name": "Accenture",
+    "ats": "workday",
+    "careers_url": "https://accenture.wd103.myworkdayjobs.com/AccentureCareers"
+  },
+  {
+    "name": "Truist",
+    "ats": "workday",
+    "careers_url": "https://truist.wd1.myworkdayjobs.com/Careers"
+  },
+  {
+    "name": "Global Payments",
+    "ats": "workday",
+    "careers_url": "https://tsys.wd1.myworkdayjobs.com/TSYS"
+  },
+  {
+    "name": "Ironclad",
+    "ats": "ashby",
+    "slug": "ironcladhq"
+  },
+  {
+    "name": "Contextual AI",
+    "ats": "ashby",
+    "slug": "contextual"
+  },
+  {
+    "name": "Tempus AI",
+    "ats": "workday",
+    "careers_url": "https://tempus.wd5.myworkdayjobs.com/Tempus_Careers"
+  },
+  {
+    "name": "S&P Global (Kensho)",
+    "ats": "workday",
+    "careers_url": "https://spgi.wd5.myworkdayjobs.com/SPGI_Careers"
+  },
+  {
+    "name": "Hebbia",
+    "ats": "ashby",
+    "slug": "hebbia-ai"
+  },
+  {
+    "name": "Nvidia",
+    "ats": "workday",
+    "careers_url": "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite"
+  },
+  {
+    "name": "Elevance Health",
+    "ats": "workday",
+    "careers_url": "https://elevancehealth.wd1.myworkdayjobs.com/ANT"
+  },
+  {
+    "name": "CareSource",
+    "ats": "workday",
+    "careers_url": "https://caresource.wd1.myworkdayjobs.com/CareSource"
+  },
+  {
+    "name": "NCR Voyix",
+    "ats": "workday",
+    "careers_url": "https://ncr.wd1.myworkdayjobs.com/ext_us"
+  },
+  {
+    "name": "NCR Atleos",
+    "ats": "workday",
+    "careers_url": "https://ncratleos.wd1.myworkdayjobs.com/ext_atleos_us"
+  },
+  {
+    "name": "Corteva",
+    "ats": "workday",
+    "careers_url": "https://corteva.wd5.myworkdayjobs.com/Corteva"
+  },
+  {
+    "name": "Blue River AI",
+    "ats": "greenhouse",
+    "slug": "bluerivertech"
+  },
+  {
+    "name": "Indigo Ag",
+    "ats": "greenhouse",
+    "slug": "indigo"
+  },
+  {
+    "name": "Caterpillar",
+    "ats": "workday",
+    "careers_url": "https://cat.wd5.myworkdayjobs.com/CaterpillarCareers"
+  },
+  {
+    "name": "Walmart Global Tech",
+    "ats": "workday",
+    "careers_url": "https://walmart.wd5.myworkdayjobs.com/WalmartExternal"
+  },
+  {
+    "name": "UPS",
+    "ats": "workday",
+    "careers_url": "https://hcmportal.wd5.myworkdayjobs.com/Search"
+  },
+  {
+    "name": "Fidelity Investments",
+    "ats": "workday",
+    "careers_url": "https://fmr.wd1.myworkdayjobs.com/FidelityCareers"
+  },
+  {
+    "name": "HubSpot",
+    "ats": "greenhouse",
+    "slug": "hubspotjobs"
+  },
+  {
+    "name": "Waymo",
+    "ats": "greenhouse",
+    "slug": "waymo"
   }
 ]
