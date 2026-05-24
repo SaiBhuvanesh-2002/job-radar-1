@@ -115,6 +115,12 @@ ROLE_BLOCK: tuple[str, ...] = (
     "account executive",
     "customer success",
     "people operations",
+    # Customer-facing / enablement roles that title-positives like
+    # "applied ai" / "ai" accidentally drag in. Examples observed in the wild:
+    # "Applied AI Coach", "Applied AI Claude Evangelist".
+    "coach",
+    "evangelist",
+    "advocate",
     # 'researcher' as a positive can drag in non-ML researchers; exclude here.
     "user researcher",
     "ux researcher",

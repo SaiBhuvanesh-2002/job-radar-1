@@ -63,6 +63,10 @@ REJECT_TITLES_BY_ROLE = [
     "Recruiter, Engineering",
     "DevOps Engineer",
     "Site Reliability Engineer",
+    # Customer-facing / enablement that slipped past via "applied ai" / "ai":
+    "Applied AI Coach",
+    "Applied AI Claude Evangelist, Startups",
+    "AI Developer Advocate",
 ]
 
 REJECT_TITLES_BY_NO_MATCH = [

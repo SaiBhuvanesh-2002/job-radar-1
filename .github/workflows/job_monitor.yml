@@ -26,6 +26,9 @@ jobs:
     env:
       GMAIL_USER: ${{ secrets.GMAIL_USER }}
       GMAIL_APP_PASS: ${{ secrets.GMAIL_APP_PASS }}
+      # v2 scoring — both optional. Missing key OR missing resume => UNSCORED fallback.
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      RESUME_CONTENT: ${{ secrets.RESUME_CONTENT }}
       GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
       - name: Checkout

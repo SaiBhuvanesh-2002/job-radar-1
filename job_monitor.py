@@ -21,6 +21,7 @@ from dotenv import load_dotenv
 
 import alerts
 import filters
+import scorer
 from ats_feed import Job, fetch_all_jobs, normalize_job
 from dedup import filter_unseen, mark_seen, open_db, row_count
 
@@ -127,14 +128,25 @@ def run(dry_run: bool = False, seed: bool = False) -> int:
                 MAX_AGE_DAYS,
             )
 
+        # v2: score the recent batch against the user's resume.
+        # Falls through to UNSCORED if no resume or no API key — pipeline still emails.
+        resume = scorer.load_resume()
+        scored = scorer.score_jobs(recent, resume=resume)
+        scored.sort(key=scorer.sort_key)
+
         if dry_run:
-            log.info("dry-run: would email %d jobs", len(recent))
-            for j in recent:
-                log.info("  - %s | %s | %s", j["company"], j["title"], j["url"])
+            log.info("dry-run: would email %d jobs", len(scored))
+            for j in scored:
+                log.info(
+                    "  - [%s %s] %s | %s | %s",
+                    j.get("bucket", "UNSCORED"),
+                    j.get("score", 0),
+                    j["company"], j["title"], j["url"],
+                )
             return 0
 
-        if recent:
-            alerts.send_digest(recent)
+        if scored:
+            alerts.send_digest(scored)
 
         # Persist ALL new jobs (recent or not) so we don't re-evaluate them later.
         mark_seen(conn, new_jobs)

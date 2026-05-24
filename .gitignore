@@ -8,6 +8,7 @@ venv/
 
 # Local secrets / state
 .env
+resume.md
 seen_jobs.db
 seen_jobs.db-journal
 
