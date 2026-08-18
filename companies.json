@@ -10,11 +10,6 @@
     "careers_url": "https://accenture.wd103.myworkdayjobs.com/AccentureCareers"
   },
   {
-    "name": "ADP",
-    "ats": "workday",
-    "careers_url": "https://adp.wd5.myworkdayjobs.com/ADP_External_Career_Site"
-  },
-  {
     "name": "Adobe",
     "ats": "workday",
     "careers_url": "https://adobe.wd5.myworkdayjobs.com/external_experienced"
@@ -22,27 +17,12 @@
   {
     "name": "AIG",
     "ats": "workday",
-    "careers_url": "https://aig.wd1.myworkdayjobs.com/aig-careers"
+    "careers_url": "https://aig.wd1.myworkdayjobs.com/aig"
   },
   {
     "name": "Anthropic",
     "ats": "greenhouse",
     "slug": "anthropic"
-  },
-  {
-    "name": "Applied Materials",
-    "ats": "workday",
-    "careers_url": "https://amat.wd1.myworkdayjobs.com/Applied_Materials_Careers"
-  },
-  {
-    "name": "Arm",
-    "ats": "workday",
-    "careers_url": "https://arm.wd3.myworkdayjobs.com/arm"
-  },
-  {
-    "name": "Armada",
-    "ats": "ashby",
-    "slug": "armada"
   },
   {
     "name": "Asana",
@@ -65,11 +45,6 @@
     "careers_url": "https://bakerhughes.wd5.myworkdayjobs.com/BakerHughes"
   },
   {
-    "name": "Bank of America",
-    "ats": "workday",
-    "careers_url": "https://bankofamerica.wd1.myworkdayjobs.com/BankofAmericaCareers"
-  },
-  {
     "name": "BetterHelp",
     "ats": "lever",
     "slug": "betterhelp"
@@ -85,11 +60,6 @@
     "careers_url": "https://bah.wd1.myworkdayjobs.com/BAH_Jobs"
   },
   {
-    "name": "Bose Professional",
-    "ats": "workday",
-    "careers_url": "https://bose.wd1.myworkdayjobs.com/Bose_Careers"
-  },
-  {
     "name": "Brex",
     "ats": "greenhouse",
     "slug": "brex"
@@ -97,7 +67,7 @@
   {
     "name": "Calix",
     "ats": "workday",
-    "careers_url": "https://calix.wd1.myworkdayjobs.com/Calix"
+    "careers_url": "https://calix.wd1.myworkdayjobs.com/External"
   },
   {
     "name": "Capital One",
@@ -122,17 +92,12 @@
   {
     "name": "Centene Corporation",
     "ats": "workday",
-    "careers_url": "https://centene.wd1.myworkdayjobs.com/Centene_Careers"
+    "careers_url": "https://centene.wd5.myworkdayjobs.com/centene_external"
   },
   {
     "name": "Chewy",
     "ats": "greenhouse",
     "slug": "chewy"
-  },
-  {
-    "name": "Cisco",
-    "ats": "workday",
-    "careers_url": "https://cisco.wd5.myworkdayjobs.com/Cisco_Jobs"
   },
   {
     "name": "Citi",
@@ -165,11 +130,6 @@
     "slug": "consensus"
   },
   {
-    "name": "Cotiviti",
-    "ats": "workday",
-    "careers_url": "https://cotiviti.wd1.myworkdayjobs.com/Cotiviti"
-  },
-  {
     "name": "Coupang",
     "ats": "greenhouse",
     "slug": "coupang"
@@ -177,7 +137,7 @@
   {
     "name": "Cox Communications",
     "ats": "workday",
-    "careers_url": "https://cox.wd1.myworkdayjobs.com/CoxEnterprises"
+    "careers_url": "https://cox.wd1.myworkdayjobs.com/Cox_External_Career_Site_1"
   },
   {
     "name": "Cranium AI",
@@ -205,14 +165,9 @@
     "slug": "datarobot"
   },
   {
-    "name": "Delta Air Lines",
-    "ats": "workday",
-    "careers_url": "https://delta.wd1.myworkdayjobs.com/External"
-  },
-  {
     "name": "Dexcom",
     "ats": "workday",
-    "careers_url": "https://dexcom.wd1.myworkdayjobs.com/Dexcom_Careers"
+    "careers_url": "https://dexcom.wd1.myworkdayjobs.com/en-US/Dexcom"
   },
   {
     "name": "DoorDash",
@@ -230,11 +185,6 @@
     "careers_url": "https://elevancehealth.wd1.myworkdayjobs.com/ANT"
   },
   {
-    "name": "Eli Lilly and Company",
-    "ats": "workday",
-    "careers_url": "https://lilly.wd5.myworkdayjobs.com/LLY_Careers"
-  },
-  {
     "name": "Estuary",
     "ats": "ashby",
     "slug": "estuary"
@@ -245,11 +195,6 @@
     "slug": "fanduel"
   },
   {
-    "name": "FedEx",
-    "ats": "workday",
-    "careers_url": "https://fedex.wd1.myworkdayjobs.com/FXE"
-  },
-  {
     "name": "Fidelity Investments",
     "ats": "workday",
     "careers_url": "https://fmr.wd1.myworkdayjobs.com/FidelityCareers"
@@ -257,27 +202,12 @@
   {
     "name": "FIS",
     "ats": "workday",
-    "careers_url": "https://fis.wd5.myworkdayjobs.com/ExternalCareerSite"
+    "careers_url": "https://fis.wd5.myworkdayjobs.com/en-US/SearchJobs/"
   },
   {
     "name": "Fiserv",
     "ats": "workday",
     "careers_url": "https://fiserv.wd5.myworkdayjobs.com/EXT"
-  },
-  {
-    "name": "Fortinet",
-    "ats": "workday",
-    "careers_url": "https://fortinet.wd1.myworkdayjobs.com/Fortinet"
-  },
-  {
-    "name": "General Motors",
-    "ats": "workday",
-    "careers_url": "https://gm.wd5.myworkdayjobs.com/Careers_GM"
-  },
-  {
-    "name": "Generate:Biomedicines",
-    "ats": "greenhouse",
-    "slug": "generatebiomedicines"
   },
   {
     "name": "Genesys",
@@ -286,8 +216,8 @@
   },
   {
     "name": "Geotab",
-    "ats": "workday",
-    "careers_url": "https://geotab.wd3.myworkdayjobs.com/GeotabCareers"
+    "ats": "greenhouse",
+    "slug": "geotab"
   },
   {
     "name": "Glean",
@@ -310,11 +240,6 @@
     "slug": "granola"
   },
   {
-    "name": "HackerRank",
-    "ats": "greenhouse",
-    "slug": "hackerrank"
-  },
-  {
     "name": "Handshake",
     "ats": "greenhouse",
     "slug": "joinhandshake"
@@ -330,24 +255,9 @@
     "careers_url": "https://hp.wd5.myworkdayjobs.com/ExternalCareerSite"
   },
   {
-    "name": "ICE",
-    "ats": "workday",
-    "careers_url": "https://ice.wd1.myworkdayjobs.com/ICE_Careers"
-  },
-  {
     "name": "Illumio",
     "ats": "greenhouse",
     "slug": "illumio"
-  },
-  {
-    "name": "Intuit",
-    "ats": "workday",
-    "careers_url": "https://intuit.wd5.myworkdayjobs.com/IntuitCareers"
-  },
-  {
-    "name": "Johnson & Johnson",
-    "ats": "workday",
-    "careers_url": "https://jnj.wd5.myworkdayjobs.com/JNJ_Careers"
   },
   {
     "name": "KLA",
@@ -365,24 +275,9 @@
     "slug": "langchain"
   },
   {
-    "name": "Lockheed Martin",
-    "ats": "workday",
-    "careers_url": "https://lockheedmartin.wd5.myworkdayjobs.com/Lockheed_Martin_Careers"
-  },
-  {
     "name": "Lorikeet",
     "ats": "ashby",
     "slug": "lorikeet"
-  },
-  {
-    "name": "Lowe's Companies, Inc.",
-    "ats": "workday",
-    "careers_url": "https://lowes.wd1.myworkdayjobs.com/Lowes_Careers"
-  },
-  {
-    "name": "Macy's",
-    "ats": "workday",
-    "careers_url": "https://macys.wd1.myworkdayjobs.com/MacysJobs"
   },
   {
     "name": "Marsh McLennan",
@@ -395,19 +290,9 @@
     "slug": "mercor"
   },
   {
-    "name": "Merck",
-    "ats": "workday",
-    "careers_url": "https://merck.wd5.myworkdayjobs.com/MSD_Careers"
-  },
-  {
     "name": "Modo Energy",
     "ats": "ashby",
     "slug": "modoenergy"
-  },
-  {
-    "name": "Northrop Grumman",
-    "ats": "workday",
-    "careers_url": "https://ngc.wd1.myworkdayjobs.com/Northrop_Grumman_External_Workday_Site"
   },
   {
     "name": "NVIDIA",
@@ -430,11 +315,6 @@
     "slug": "optiver"
   },
   {
-    "name": "PayPal",
-    "ats": "workday",
-    "careers_url": "https://paypal.wd1.myworkdayjobs.com/PayPal_Jobs"
-  },
-  {
     "name": "Perplexity",
     "ats": "ashby",
     "slug": "perplexity"
@@ -450,19 +330,9 @@
     "slug": "pocketfm"
   },
   {
-    "name": "Procter & Gamble",
-    "ats": "workday",
-    "careers_url": "https://pg.wd5.myworkdayjobs.com/pgcareers"
-  },
-  {
     "name": "Prolific",
     "ats": "lever",
     "slug": "prolific"
-  },
-  {
-    "name": "PwC",
-    "ats": "workday",
-    "careers_url": "https://pwc.wd3.myworkdayjobs.com/PwC_US_Careers"
   },
   {
     "name": "Qualcomm",
@@ -525,24 +395,9 @@
     "careers_url": "https://shell.wd3.myworkdayjobs.com/ShellCareers"
   },
   {
-    "name": "Signature Aviation",
-    "ats": "workday",
-    "careers_url": "https://signatureaviation.wd1.myworkdayjobs.com/Signature_Aviation_Careers"
-  },
-  {
-    "name": "Snap Inc.",
-    "ats": "workday",
-    "careers_url": "https://snapchat.wd1.myworkdayjobs.com/Snap_Careers"
-  },
-  {
     "name": "Snowflake",
     "ats": "ashby",
     "slug": "snowflake"
-  },
-  {
-    "name": "State Street",
-    "ats": "workday",
-    "careers_url": "https://statestreet.wd1.myworkdayjobs.com/StateStreetBankCareers"
   },
   {
     "name": "Stripe",
@@ -555,24 +410,9 @@
     "slug": "supio"
   },
   {
-    "name": "Synchrony",
-    "ats": "workday",
-    "careers_url": "https://synchrony.wd5.myworkdayjobs.com/SynchronyCareers"
-  },
-  {
-    "name": "T-Mobile",
-    "ats": "workday",
-    "careers_url": "https://tmobile.wd1.myworkdayjobs.com/TMobile"
-  },
-  {
     "name": "The Trade Desk",
     "ats": "greenhouse",
     "slug": "thetradedesk"
-  },
-  {
-    "name": "TK Elevator",
-    "ats": "workday",
-    "careers_url": "https://tkelevator.wd3.myworkdayjobs.com/TKECareers"
   },
   {
     "name": "Topsort",
@@ -583,11 +423,6 @@
     "name": "Truist",
     "ats": "workday",
     "careers_url": "https://truist.wd1.myworkdayjobs.com/Careers"
-  },
-  {
-    "name": "Uber",
-    "ats": "workday",
-    "careers_url": "https://uber.wd1.myworkdayjobs.com/Uber_Careers"
   },
   {
     "name": "Upwork",
@@ -612,12 +447,7 @@
   {
     "name": "The Walt Disney Company",
     "ats": "workday",
-    "careers_url": "https://disney.wd5.myworkdayjobs.com/disneycareers"
-  },
-  {
-    "name": "Walmart",
-    "ats": "workday",
-    "careers_url": "https://walmart.wd5.myworkdayjobs.com/WalmartExternal"
+    "careers_url": "https://disney.wd5.myworkdayjobs.com/en-US/disneycareer"
   },
   {
     "name": "Wayfair",
@@ -625,19 +455,9 @@
     "slug": "wayfair"
   },
   {
-    "name": "Wells Fargo",
-    "ats": "workday",
-    "careers_url": "https://wellsfargo.wd1.myworkdayjobs.com/WellsFargoJobs"
-  },
-  {
     "name": "Workday",
     "ats": "workday",
     "careers_url": "https://workday.wd5.myworkdayjobs.com/Workday"
-  },
-  {
-    "name": "Yahoo",
-    "ats": "workday",
-    "careers_url": "https://yahoo.wd5.myworkdayjobs.com/YahooCareers"
   },
   {
     "name": "Yext",
