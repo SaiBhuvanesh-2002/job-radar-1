@@ -78,7 +78,7 @@ Score guide:
 - 5-7  (MED):  role/seniority match but stack is partial, OR strong stack but adjacent role
 - 1-4  (LOW):  major mismatch on seniority, stack, or role family
 
-Cite real resume experience in rationales, not generic phrases. The candidate is mid-senior (3-5 yrs) targeting AI/ML IC roles in the US — do NOT penalize US-based or Remote roles.
+Cite real resume experience in rationales, not generic phrases. The candidate has ~4 yrs AI/ML experience, targets Data Scientist / AI Engineer IC roles in the US, requires H1B sponsorship, and is open to remote/hybrid — do NOT penalize US-based or Remote roles; deprioritize roles that explicitly exclude sponsorship.
 
 Return STRICT JSON: a list with one object per job, in the same order, with fields {{"index", "score", "rationale"}}. No prose, no markdown fences.
 
