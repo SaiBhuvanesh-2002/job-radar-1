@@ -27,6 +27,10 @@ ACCEPT_TITLES = [
     "MLOps Engineer",
     "LLM Engineer",
     "Senior AI/ML Engineer",
+    "Entry-Level Data Scientist",
+    "Entry Level ML Engineer",
+    "New Grad AI Engineer",
+    "Graduate Data Scientist",
 ]
 
 REJECT_TITLES_BY_SENIORITY = [
@@ -40,7 +44,6 @@ REJECT_TITLES_BY_SENIORITY = [
     ("Principal Data Scientist", "principal"),
     ("ML Engineer, Tech Lead", "lead"),
     ("Founding AI Engineer", "founding"),
-    ("Data Science Graduate Program", "graduate"),
 ]
 
 REJECT_TITLES_BY_ROLE = [

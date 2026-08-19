@@ -56,12 +56,13 @@ TITLE_POSITIVE: tuple[str, ...] = (
 )
 
 # ---------- Title negatives (always reject) ----------
-# Seniority words that imply >5 years experience or management track.
+# Intern/junior stay blocked. Entry-level / graduate / new-grad are allowed.
+# Staff+ and management imply more seniority than we're targeting.
 # Word-boundary regex so 'lead' catches 'Tech Lead' / 'Lead, ML' but not
 # 'Leadership' or 'Leads team'.
 SENIORITY_BLOCK_RE = re.compile(
     r"\b(?:"
-    r"intern|internship|junior|entry[- ]level|graduate|new\s+grad|"
+    r"intern|internship|junior|"
     r"manager|director|head\s+of|chief|"
     r"principal|staff|lead|"
     r"vp|vice\s+president|"
