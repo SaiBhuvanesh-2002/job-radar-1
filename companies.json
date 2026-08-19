@@ -468,5 +468,100 @@
     "name": "Zenoti",
     "ats": "greenhouse",
     "slug": "zenoti"
+  },
+  {
+    "name": "Pfizer",
+    "ats": "workday",
+    "careers_url": "https://pfizer.wd1.myworkdayjobs.com/PfizerCareers"
+  },
+  {
+    "name": "Johnson & Johnson",
+    "ats": "workday",
+    "careers_url": "https://jj.wd5.myworkdayjobs.com/JJ"
+  },
+  {
+    "name": "Merck",
+    "ats": "workday",
+    "careers_url": "https://msd.wd5.myworkdayjobs.com/SearchJobs"
+  },
+  {
+    "name": "Bristol Myers Squibb",
+    "ats": "workday",
+    "careers_url": "https://bristolmyerssquibb.wd5.myworkdayjobs.com/BMS"
+  },
+  {
+    "name": "Amgen",
+    "ats": "workday",
+    "careers_url": "https://amgen.wd1.myworkdayjobs.com/Careers"
+  },
+  {
+    "name": "Gilead Sciences",
+    "ats": "workday",
+    "careers_url": "https://gilead.wd1.myworkdayjobs.com/gileadcareers"
+  },
+  {
+    "name": "Labcorp",
+    "ats": "workday",
+    "careers_url": "https://labcorp.wd1.myworkdayjobs.com/external"
+  },
+  {
+    "name": "McKesson",
+    "ats": "workday",
+    "careers_url": "https://mckesson.wd3.myworkdayjobs.com/External_Careers"
+  },
+  {
+    "name": "Cardinal Health",
+    "ats": "workday",
+    "careers_url": "https://cardinalhealth.wd1.myworkdayjobs.com/EXT"
+  },
+  {
+    "name": "AstraZeneca",
+    "ats": "workday",
+    "careers_url": "https://astrazeneca.wd3.myworkdayjobs.com/Careers"
+  },
+  {
+    "name": "Tempus",
+    "ats": "workday",
+    "careers_url": "https://tempus.wd5.myworkdayjobs.com/Tempus_Careers"
+  },
+  {
+    "name": "Zocdoc",
+    "ats": "greenhouse",
+    "slug": "zocdoc"
+  },
+  {
+    "name": "One Medical",
+    "ats": "greenhouse",
+    "slug": "onemedical"
+  },
+  {
+    "name": "Maven Clinic",
+    "ats": "greenhouse",
+    "slug": "mavenclinic"
+  },
+  {
+    "name": "Oscar Health",
+    "ats": "greenhouse",
+    "slug": "oscar"
+  },
+  {
+    "name": "Spring Health",
+    "ats": "greenhouse",
+    "slug": "springhealth66"
+  },
+  {
+    "name": "Omada Health",
+    "ats": "greenhouse",
+    "slug": "omadahealth"
+  },
+  {
+    "name": "Headway",
+    "ats": "ashby",
+    "slug": "headway"
+  },
+  {
+    "name": "Abridge",
+    "ats": "ashby",
+    "slug": "abridge"
   }
 ]
