@@ -58,7 +58,19 @@ def test_greenhouse_normalizes():
     assert job["title"] == "ML Platform Engineer"
     assert job["team"] == "ML Infrastructure"
     assert job["remote"] is True
-    assert job["posted_at"] is not None
+    # first_published wins over updated_at so edits don't fake freshness
+    assert job["posted_at"] == "2026-05-09T12:00:00-07:00"
+
+
+def test_greenhouse_prefers_first_published():
+    raw = _load("greenhouse_sample.json")["jobs"][0]
+    raw["_ats"] = "greenhouse"
+    raw["_company"] = "example"
+    raw["updated_at"] = "2026-05-20T18:00:00-07:00"  # later edit
+    raw["first_published"] = "2026-05-01T12:00:00-07:00"
+    job = normalize_job(raw)
+    assert job is not None
+    assert job["posted_at"] == "2026-05-01T12:00:00-07:00"
 
 
 def test_ashby_normalizes():

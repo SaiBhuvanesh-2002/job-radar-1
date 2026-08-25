@@ -295,7 +295,9 @@ def normalize_job(raw: dict[str, Any]) -> Job | None:
                 description=(raw.get("content") or "")[:2000],
                 url=raw.get("absolute_url", ""),
                 remote="remote" in loc.lower(),
-                posted_at=raw.get("updated_at") or raw.get("first_published"),
+                # Prefer first_published: updated_at refreshes on edits and makes
+                # week-old postings look brand-new to the recency filter.
+                posted_at=raw.get("first_published") or raw.get("updated_at"),
             )
         if ats == "ashby":
             # REST shape: department, team, location, jobUrl, publishedAt, descriptionPlain.

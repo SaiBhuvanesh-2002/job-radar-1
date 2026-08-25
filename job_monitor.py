@@ -63,11 +63,12 @@ def _parse_iso(s: str | None) -> datetime | None:
 def is_recent(job: Job, now: datetime, max_age_days: int = MAX_AGE_DAYS) -> bool:
     """Whether the job's posted_at is within max_age_days of now.
 
-    Jobs without a posted_at are kept (the dedup hash is the only signal we have).
+    Jobs without a posted_at are dropped — keeping them used to email week-old
+    postings that Job boards still show as 15–20 days old with many applicants.
     """
     posted = _parse_iso(job.get("posted_at"))
     if posted is None:
-        return True
+        return False
     if posted.tzinfo is None:
         posted = posted.replace(tzinfo=timezone.utc)
     return (now - posted) <= timedelta(days=max_age_days)
