@@ -20,8 +20,11 @@ from ats_feed import Job
 # A title must contain at least one of these phrases to pass.
 TITLE_POSITIVE: tuple[str, ...] = (
     "data scientist",
+    "data science",
     "ml engineer",
     "machine learning engineer",
+    "machine learning",       # e.g. Software Engineer, Machine Learning
+    "deep learning",
     "ai engineer",
     "applied scientist",
     "applied ai",
@@ -38,21 +41,30 @@ TITLE_POSITIVE: tuple[str, ...] = (
     "conversational ai engineer",
     "enterprise ai engineer",
     "ai software engineer",
-    "llm",              
-    "rag",              
-    "agentic",          
+    "llm",
+    "rag",
+    "agentic",
     "ai platform",
+    "ml platform",
     "nlp engineer",
+    "nlp",
+    "natural language",
+    "computer vision",
     "gen ai",
     "generative ai",
+    "artificial intelligence",
+    "foundation model",
+    "prompt engineer",
     "mlops",
     "llm engineer",
     "ai/ml",
+    "ml scientist",
+    "ai scientist",
     "inference engineer",
     "training engineer",
     "ml framework",
     "ai safety",
-    "ai alignment",          # AI alignment research
+    "ai alignment",
 )
 
 # ---------- Title negatives (always reject) ----------

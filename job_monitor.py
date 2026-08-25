@@ -36,7 +36,8 @@ COMPANIES_PATH = REPO_ROOT / "companies.json"
 DB_PATH = REPO_ROOT / "seen_jobs.db"
 
 # Cache-eviction safety net: even on dedup miss, never email jobs older than this.
-MAX_AGE_DAYS = 1
+# 0.25 days = 6 hours — early-wave alerts so you are not applicant #70+.
+MAX_AGE_DAYS = 0.25
 
 
 def load_companies() -> list[dict[str, str]]:
@@ -60,7 +61,7 @@ def _parse_iso(s: str | None) -> datetime | None:
         return None
 
 
-def is_recent(job: Job, now: datetime, max_age_days: int = MAX_AGE_DAYS) -> bool:
+def is_recent(job: Job, now: datetime, max_age_days: float = MAX_AGE_DAYS) -> bool:
     """Whether the job's posted_at is within max_age_days of now.
 
     Jobs without a posted_at are dropped — keeping them used to email week-old
@@ -124,9 +125,9 @@ def run(dry_run: bool = False, seed: bool = False) -> int:
         dropped = len(new_jobs) - len(recent)
         if dropped:
             log.warning(
-                "dropped %d new-but-old jobs (>%dd) — likely cache-miss recovery",
+                "dropped %d new-but-old jobs (>%s) — likely cache-miss recovery",
                 dropped,
-                MAX_AGE_DAYS,
+                f"{MAX_AGE_DAYS * 24:.0f}h",
             )
 
         # v2: score the recent batch against the user's resume.
