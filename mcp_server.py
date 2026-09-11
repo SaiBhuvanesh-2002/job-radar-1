@@ -95,7 +95,7 @@ def _pipeline_imports():
 # Tool implementations
 # ---------------------------------------------------------------------------
 
-def _tool_search_jobs(max_age_hours: float = 6, limit: int = 20) -> str:
+def _tool_search_jobs(max_age_hours: float = 10, limit: int = 20) -> str:
     """Fetch, filter, score, and tailor jobs. Returns JSON list of results."""
     m = _pipeline_imports()
     companies = m["load_companies"]()
@@ -133,7 +133,7 @@ def _tool_search_jobs(max_age_hours: float = 6, limit: int = 20) -> str:
     return json.dumps({"jobs": out, "total": len(out)}, indent=2)
 
 
-def _tool_get_digest(max_age_hours: float = 6) -> str:
+def _tool_get_digest(max_age_hours: float = 10) -> str:
     """Return the current digest as plain text (no email sent)."""
     m = _pipeline_imports()
     companies = m["load_companies"]()
@@ -259,21 +259,21 @@ def main() -> None:
     mcp = _Server("job-radar")
 
     @mcp.tool()
-    def search_jobs(max_age_hours: float = 6, limit: int = 20) -> str:
+    def search_jobs(max_age_hours: float = 10, limit: int = 20) -> str:
         """Fetch, filter, score and tailor jobs matching your resume right now.
 
         Args:
-            max_age_hours: Only return jobs posted within this many hours (default 6).
+            max_age_hours: Only return jobs posted within this many hours (default 10).
             limit: Maximum number of jobs to score and tailor (default 20).
         """
         return _tool_search_jobs(max_age_hours=max_age_hours, limit=limit)
 
     @mcp.tool()
-    def get_digest(max_age_hours: float = 6) -> str:
+    def get_digest(max_age_hours: float = 10) -> str:
         """Return the current job digest as plain text (no email sent).
 
         Args:
-            max_age_hours: Age window for freshness filtering (default 6).
+            max_age_hours: Age window for freshness filtering (default 10).
         """
         return _tool_get_digest(max_age_hours=max_age_hours)
 

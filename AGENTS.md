@@ -6,7 +6,7 @@ Hand this file to an AI agent (Claude, Cursor, etc.) as the source of truth for 
 
 ## One-sentence summary
 
-Personal job-search bot: every ~2 hours it polls the active company ATS boards in `companies.json`, keeps only **US / remote mid-level AI–ML IC roles posted in the last 6 hours**, scores them vs the owner’s resume with **Gemini**, and emails a ranked Gmail HTML digest.
+Personal job-search bot: every ~2 hours it polls the active company ATS boards in `companies.json`, keeps only **US / remote mid-level AI–ML IC roles posted in the last 10 hours**, scores them vs the owner’s resume with **Gemini**, and emails a ranked Gmail HTML digest.
 
 Owner goal: apply **early** (before Jobright/Simplify piles up 30–50 applicants) and submit **more relevant apps per day**.
 
@@ -42,7 +42,7 @@ CI: `.github/workflows/job_monitor.yml` (`0 */2 * * *` cron, `timeout-minutes: 1
 
 | File | Role |
 |------|------|
-| `job_monitor.py` | Orchestrator. `MAX_AGE_DAYS = 0.25` (**6 hours**). Recency drop + seed/dry-run. |
+| `job_monitor.py` | Orchestrator. `MAX_AGE_DAYS = 10/24` (**10 hours**). Recency drop + seed/dry-run. |
 | `ats_feed.py` | Fetch + normalize Lever / Greenhouse / Ashby / Workday → unified `Job`. |
 | `filters.py` | Title positives, seniority/role blocks, US/remote location allow/block. |
 | `dedup.py` | SQLite `seen_jobs.db`; hash = `sha256(ats:job_id)`. |
@@ -109,7 +109,7 @@ Entry-level / graduate / new-grad titles are **allowed** (not blocked).
 ## Recency + dedup (why emails are sparse or “old”)
 
 1. **Dedup:** once a job ID is in `seen_jobs.db`, it never emails again.  
-2. **Recency:** only jobs with `posted_at` within **6 hours** are emailed (`MAX_AGE_DAYS = 0.25`).  
+2. **Recency:** only jobs with `posted_at` within **10 hours** are emailed (`MAX_AGE_DAYS = 10/24`).  
 3. **Cache:** Actions restores/saves `seen_jobs.db` via `actions/cache`. Cache miss → many IDs look “new”; recency is the flood safety net. Stale-but-new are still `mark_seen` so they don’t loop.  
 4. **Outages:** if Actions is down for days, catch-up digests can include anything still inside the age window that wasn’t seen yet.
 
@@ -210,13 +210,13 @@ gh workflow run job_monitor.yml -f mode=normal
 
 | Lever | Current choice | Effect |
 |-------|----------------|--------|
-| Age window | **6 hours** | Fewer emails; earlier in applicant wave |
+| Age window | **10 hours** | More volume than 6h; still same-day early wave |
 | Titles | Broader ML/AI phrases | More apps/day without pure SWE spam |
 | Seniority | Block staff/lead/manager; allow new-grad | Mid IC focus |
 | Public repo | Yes | Free frequent Actions |
 | Cron | Every 2 hours | Fits large `companies.json`; Actions job timeout 180 min |
 
-Volume is low on quiet days because health/AI boards don’t always post matching titles inside 6h — that is expected, not a silent failure. Check Actions logs for `filter-matched`, `after dedup`, `dropped … old`, `sent email`.
+Volume is low on quiet days because health/AI boards don’t always post matching titles inside 10h — that is expected, not a silent failure. Check Actions logs for `filter-matched`, `after dedup`, `dropped … old`, `sent email`.
 
 ---
 
@@ -233,5 +233,5 @@ Volume is low on quiet days because health/AI boards don’t always post matchin
 
 ## Related human docs
 
-- `README.md` — setup narrative (may lag slightly; **trust this AGENTS.md for current numbers**: 6h window, 113 companies, public repo).  
+- `README.md` — setup narrative (may lag slightly; **trust this AGENTS.md for current numbers**: 10h window, large `companies.json`, public repo).  
 - `resume.example.md` — resume shape for local scoring.

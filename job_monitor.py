@@ -37,8 +37,8 @@ COMPANIES_PATH = REPO_ROOT / "companies.json"
 DB_PATH = REPO_ROOT / "seen_jobs.db"
 
 # Cache-eviction safety net: even on dedup miss, never email jobs older than this.
-# 0.25 days = 6 hours — early-wave alerts so you are not applicant #70+.
-MAX_AGE_DAYS = 0.25
+# 10/24 days = 10 hours — a bit more volume than the 6h early-wave window.
+MAX_AGE_DAYS = 10 / 24
 
 
 def load_companies() -> list[dict[str, str]]:
