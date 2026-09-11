@@ -6,7 +6,7 @@ Hand this file to an AI agent (Claude, Cursor, etc.) as the source of truth for 
 
 ## One-sentence summary
 
-Personal job-search bot: every ~30 minutes it polls **113** company ATS boards, keeps only **US / remote mid-level AI–ML IC roles posted in the last 6 hours**, scores them vs the owner’s resume with **Gemini**, and emails a ranked Gmail HTML digest.
+Personal job-search bot: every ~2 hours it polls the active company ATS boards in `companies.json`, keeps only **US / remote mid-level AI–ML IC roles posted in the last 6 hours**, scores them vs the owner’s resume with **Gemini**, and emails a ranked Gmail HTML digest.
 
 Owner goal: apply **early** (before Jobright/Simplify piles up 30–50 applicants) and submit **more relevant apps per day**.
 
@@ -26,7 +26,7 @@ companies.json
 ```
 
 Orchestrator: `job_monitor.py`  
-CI: `.github/workflows/job_monitor.yml` (`*/30` cron + `workflow_dispatch`)
+CI: `.github/workflows/job_monitor.yml` (`0 */2 * * *` cron, `timeout-minutes: 180`, + `workflow_dispatch`)
 
 ### Run modes
 
@@ -132,13 +132,15 @@ Tune fit by editing `_PROMPT_TEMPLATE` in `scorer.py`.
 
 ## Companies (`companies.json`)
 
-- **113** entries today: Workday ~47, Greenhouse ~41, Ashby ~21, Lever ~4  
+- **Active list:** `companies.json` — only file the pipeline loads (~130 boards).
+- **Reference catalog:** `companies_full.json` — ~15k candidate boards; **not** polled by CI. Use with `verify_companies.py` to probe and cherry-pick.
+- ATS mix today: Workday ~47, Greenhouse ~50, Ashby ~35, Lever ~4 (approx.; run `python -c "..."` to recount).  
 - Lever / Greenhouse / Ashby → need **`slug`**  
 - Workday → need full **`careers_url`** like  
   `https://{tenant}.wd{N}.myworkdayjobs.com/{board}`  
   Do **not** put `/en-US/` as the board segment; the CXS client breaks.  
 - Many large employers use Phenom/custom portals — **unsupported**; don’t add them.  
-- Before adding: run `python verify_companies.py` (or equivalent probe). Only commit boards that return jobs.
+- Before adding: run `python verify_companies.py --file companies_full.json --only-new --filter 'your-keyword' --limit 50` and paste working rows into `companies.json`.
 
 ---
 
@@ -212,7 +214,7 @@ gh workflow run job_monitor.yml -f mode=normal
 | Titles | Broader ML/AI phrases | More apps/day without pure SWE spam |
 | Seniority | Block staff/lead/manager; allow new-grad | Mid IC focus |
 | Public repo | Yes | Free frequent Actions |
-| Cron | Every 30 min | Near-real-time; runs ~20–25 min each |
+| Cron | Every 2 hours | Fits large `companies.json`; Actions job timeout 180 min |
 
 Volume is low on quiet days because health/AI boards don’t always post matching titles inside 6h — that is expected, not a silent failure. Check Actions logs for `filter-matched`, `after dedup`, `dropped … old`, `sent email`.
 

@@ -1,475 +1,5 @@
 [
   {
-    "name": "Abbott",
-    "ats": "workday",
-    "careers_url": "https://abbott.wd5.myworkdayjobs.com/abbottcareers"
-  },
-  {
-    "name": "Accenture",
-    "ats": "workday",
-    "careers_url": "https://accenture.wd103.myworkdayjobs.com/AccentureCareers"
-  },
-  {
-    "name": "Adobe",
-    "ats": "workday",
-    "careers_url": "https://adobe.wd5.myworkdayjobs.com/external_experienced"
-  },
-  {
-    "name": "AIG",
-    "ats": "workday",
-    "careers_url": "https://aig.wd1.myworkdayjobs.com/aig"
-  },
-  {
-    "name": "Anthropic",
-    "ats": "greenhouse",
-    "slug": "anthropic"
-  },
-  {
-    "name": "Asana",
-    "ats": "greenhouse",
-    "slug": "asana"
-  },
-  {
-    "name": "Atmosfy",
-    "ats": "ashby",
-    "slug": "atmosfy"
-  },
-  {
-    "name": "August Health",
-    "ats": "ashby",
-    "slug": "augusthealth"
-  },
-  {
-    "name": "Baker Hughes",
-    "ats": "workday",
-    "careers_url": "https://bakerhughes.wd5.myworkdayjobs.com/BakerHughes"
-  },
-  {
-    "name": "BetterHelp",
-    "ats": "lever",
-    "slug": "betterhelp"
-  },
-  {
-    "name": "Boeing",
-    "ats": "workday",
-    "careers_url": "https://boeing.wd1.myworkdayjobs.com/EXTERNAL_CAREERS"
-  },
-  {
-    "name": "Booz Allen Hamilton",
-    "ats": "workday",
-    "careers_url": "https://bah.wd1.myworkdayjobs.com/BAH_Jobs"
-  },
-  {
-    "name": "Brex",
-    "ats": "greenhouse",
-    "slug": "brex"
-  },
-  {
-    "name": "Calix",
-    "ats": "workday",
-    "careers_url": "https://calix.wd1.myworkdayjobs.com/External"
-  },
-  {
-    "name": "Capital One",
-    "ats": "workday",
-    "careers_url": "https://capitalone.wd12.myworkdayjobs.com/Capital_One"
-  },
-  {
-    "name": "Cardlytics",
-    "ats": "greenhouse",
-    "slug": "cardlytics"
-  },
-  {
-    "name": "Caterpillar Inc.",
-    "ats": "workday",
-    "careers_url": "https://cat.wd5.myworkdayjobs.com/CaterpillarCareers"
-  },
-  {
-    "name": "Cellino",
-    "ats": "greenhouse",
-    "slug": "cellinobiotech"
-  },
-  {
-    "name": "Centene Corporation",
-    "ats": "workday",
-    "careers_url": "https://centene.wd5.myworkdayjobs.com/centene_external"
-  },
-  {
-    "name": "Chewy",
-    "ats": "greenhouse",
-    "slug": "chewy"
-  },
-  {
-    "name": "Citi",
-    "ats": "workday",
-    "careers_url": "https://citi.wd5.myworkdayjobs.com/2"
-  },
-  {
-    "name": "ClearML",
-    "ats": "ashby",
-    "slug": "clearml"
-  },
-  {
-    "name": "Cloudflare",
-    "ats": "greenhouse",
-    "slug": "cloudflare"
-  },
-  {
-    "name": "Coinbase",
-    "ats": "greenhouse",
-    "slug": "coinbase"
-  },
-  {
-    "name": "Commure",
-    "ats": "ashby",
-    "slug": "commure"
-  },
-  {
-    "name": "Consensus",
-    "ats": "ashby",
-    "slug": "consensus"
-  },
-  {
-    "name": "Coupang",
-    "ats": "greenhouse",
-    "slug": "coupang"
-  },
-  {
-    "name": "Cox Communications",
-    "ats": "workday",
-    "careers_url": "https://cox.wd1.myworkdayjobs.com/Cox_External_Career_Site_1"
-  },
-  {
-    "name": "Cranium AI",
-    "ats": "ashby",
-    "slug": "cranium"
-  },
-  {
-    "name": "Cursor (Anysphere)",
-    "ats": "ashby",
-    "slug": "anysphere"
-  },
-  {
-    "name": "CVS Health",
-    "ats": "workday",
-    "careers_url": "https://cvshealth.wd1.myworkdayjobs.com/CVS_Health_Careers"
-  },
-  {
-    "name": "Databricks",
-    "ats": "greenhouse",
-    "slug": "databricks"
-  },
-  {
-    "name": "DataRobot",
-    "ats": "greenhouse",
-    "slug": "datarobot"
-  },
-  {
-    "name": "Dexcom",
-    "ats": "workday",
-    "careers_url": "https://dexcom.wd1.myworkdayjobs.com/en-US/Dexcom"
-  },
-  {
-    "name": "DoorDash",
-    "ats": "greenhouse",
-    "slug": "doordash"
-  },
-  {
-    "name": "Dropbox",
-    "ats": "greenhouse",
-    "slug": "dropbox"
-  },
-  {
-    "name": "Elevance Health",
-    "ats": "workday",
-    "careers_url": "https://elevancehealth.wd1.myworkdayjobs.com/ANT"
-  },
-  {
-    "name": "Estuary",
-    "ats": "ashby",
-    "slug": "estuary"
-  },
-  {
-    "name": "FanDuel",
-    "ats": "greenhouse",
-    "slug": "fanduel"
-  },
-  {
-    "name": "Fidelity Investments",
-    "ats": "workday",
-    "careers_url": "https://fmr.wd1.myworkdayjobs.com/FidelityCareers"
-  },
-  {
-    "name": "FIS",
-    "ats": "workday",
-    "careers_url": "https://fis.wd5.myworkdayjobs.com/en-US/SearchJobs/"
-  },
-  {
-    "name": "Fiserv",
-    "ats": "workday",
-    "careers_url": "https://fiserv.wd5.myworkdayjobs.com/EXT"
-  },
-  {
-    "name": "Genesys",
-    "ats": "workday",
-    "careers_url": "https://genesys.wd1.myworkdayjobs.com/Genesys"
-  },
-  {
-    "name": "Geotab",
-    "ats": "greenhouse",
-    "slug": "geotab"
-  },
-  {
-    "name": "Glean",
-    "ats": "greenhouse",
-    "slug": "gleanwork"
-  },
-  {
-    "name": "Global Payments Inc.",
-    "ats": "workday",
-    "careers_url": "https://tsys.wd1.myworkdayjobs.com/TSYS"
-  },
-  {
-    "name": "Google DeepMind",
-    "ats": "greenhouse",
-    "slug": "deepmind"
-  },
-  {
-    "name": "Granola",
-    "ats": "ashby",
-    "slug": "granola"
-  },
-  {
-    "name": "Handshake",
-    "ats": "greenhouse",
-    "slug": "joinhandshake"
-  },
-  {
-    "name": "The Home Depot",
-    "ats": "workday",
-    "careers_url": "https://homedepot.wd5.myworkdayjobs.com/CareerDepot"
-  },
-  {
-    "name": "HP",
-    "ats": "workday",
-    "careers_url": "https://hp.wd5.myworkdayjobs.com/ExternalCareerSite"
-  },
-  {
-    "name": "Illumio",
-    "ats": "greenhouse",
-    "slug": "illumio"
-  },
-  {
-    "name": "KLA",
-    "ats": "workday",
-    "careers_url": "https://kla.wd1.myworkdayjobs.com/Search"
-  },
-  {
-    "name": "Kore.ai",
-    "ats": "lever",
-    "slug": "kore-ai"
-  },
-  {
-    "name": "LangChain",
-    "ats": "ashby",
-    "slug": "langchain"
-  },
-  {
-    "name": "Lorikeet",
-    "ats": "ashby",
-    "slug": "lorikeet"
-  },
-  {
-    "name": "Marsh McLennan",
-    "ats": "workday",
-    "careers_url": "https://mmc.wd1.myworkdayjobs.com/MMC"
-  },
-  {
-    "name": "Mercor",
-    "ats": "ashby",
-    "slug": "mercor"
-  },
-  {
-    "name": "Modo Energy",
-    "ats": "ashby",
-    "slug": "modoenergy"
-  },
-  {
-    "name": "NVIDIA",
-    "ats": "workday",
-    "careers_url": "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite"
-  },
-  {
-    "name": "OpenAI",
-    "ats": "ashby",
-    "slug": "openai"
-  },
-  {
-    "name": "Opsera",
-    "ats": "lever",
-    "slug": "opsera"
-  },
-  {
-    "name": "Optiver",
-    "ats": "greenhouse",
-    "slug": "optiver"
-  },
-  {
-    "name": "Perplexity",
-    "ats": "ashby",
-    "slug": "perplexity"
-  },
-  {
-    "name": "PNC",
-    "ats": "workday",
-    "careers_url": "https://pnc.wd5.myworkdayjobs.com/PNC_Careers"
-  },
-  {
-    "name": "Pocket FM",
-    "ats": "greenhouse",
-    "slug": "pocketfm"
-  },
-  {
-    "name": "Prolific",
-    "ats": "lever",
-    "slug": "prolific"
-  },
-  {
-    "name": "Qualcomm",
-    "ats": "workday",
-    "careers_url": "https://qualcomm.wd12.myworkdayjobs.com/External"
-  },
-  {
-    "name": "Quince",
-    "ats": "greenhouse",
-    "slug": "quince"
-  },
-  {
-    "name": "Ramp",
-    "ats": "ashby",
-    "slug": "ramp"
-  },
-  {
-    "name": "Realtor.com",
-    "ats": "greenhouse",
-    "slug": "realtor"
-  },
-  {
-    "name": "Roadie",
-    "ats": "greenhouse",
-    "slug": "roadie"
-  },
-  {
-    "name": "Roche",
-    "ats": "workday",
-    "careers_url": "https://roche.wd3.myworkdayjobs.com/roche-ext"
-  },
-  {
-    "name": "Rokt",
-    "ats": "greenhouse",
-    "slug": "rokt"
-  },
-  {
-    "name": "S&P Global",
-    "ats": "workday",
-    "careers_url": "https://spgi.wd5.myworkdayjobs.com/SPGI_Careers"
-  },
-  {
-    "name": "Salesforce",
-    "ats": "workday",
-    "careers_url": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site"
-  },
-  {
-    "name": "Salesloft",
-    "ats": "greenhouse",
-    "slug": "salesloft"
-  },
-  {
-    "name": "Scale AI",
-    "ats": "greenhouse",
-    "slug": "scaleai"
-  },
-  {
-    "name": "Shell",
-    "ats": "workday",
-    "careers_url": "https://shell.wd3.myworkdayjobs.com/ShellCareers"
-  },
-  {
-    "name": "Snowflake",
-    "ats": "ashby",
-    "slug": "snowflake"
-  },
-  {
-    "name": "Stripe",
-    "ats": "greenhouse",
-    "slug": "stripe"
-  },
-  {
-    "name": "Supio",
-    "ats": "ashby",
-    "slug": "supio"
-  },
-  {
-    "name": "The Trade Desk",
-    "ats": "greenhouse",
-    "slug": "thetradedesk"
-  },
-  {
-    "name": "Topsort",
-    "ats": "ashby",
-    "slug": "topsort"
-  },
-  {
-    "name": "Truist",
-    "ats": "workday",
-    "careers_url": "https://truist.wd1.myworkdayjobs.com/Careers"
-  },
-  {
-    "name": "Upwork",
-    "ats": "greenhouse",
-    "slug": "upwork"
-  },
-  {
-    "name": "UPS",
-    "ats": "workday",
-    "careers_url": "https://hcmportal.wd5.myworkdayjobs.com/Search"
-  },
-  {
-    "name": "ValGenesis",
-    "ats": "greenhouse",
-    "slug": "valgenesis"
-  },
-  {
-    "name": "Versapay",
-    "ats": "greenhouse",
-    "slug": "versapay"
-  },
-  {
-    "name": "The Walt Disney Company",
-    "ats": "workday",
-    "careers_url": "https://disney.wd5.myworkdayjobs.com/en-US/disneycareer"
-  },
-  {
-    "name": "Wayfair",
-    "ats": "greenhouse",
-    "slug": "wayfair"
-  },
-  {
-    "name": "Workday",
-    "ats": "workday",
-    "careers_url": "https://workday.wd5.myworkdayjobs.com/Workday"
-  },
-  {
-    "name": "Yext",
-    "ats": "greenhouse",
-    "slug": "yext"
-  },
-  {
-    "name": "Zenoti",
-    "ats": "greenhouse",
-    "slug": "zenoti"
-  },
-  {
     "name": "NewsBreak",
     "ats": "greenhouse",
     "slug": "newsbreak"
@@ -513,6 +43,11 @@
     "name": "Innodata Inc.",
     "ats": "greenhouse",
     "slug": "innodatainc"
+  },
+  {
+    "name": "Mercor",
+    "ats": "ashby",
+    "slug": "mercor"
   },
   {
     "name": "Brain Co.",
@@ -580,6 +115,16 @@
     "slug": "airbnb"
   },
   {
+    "name": "Snowflake",
+    "ats": "ashby",
+    "slug": "snowflake"
+  },
+  {
+    "name": "Scale AI",
+    "ats": "greenhouse",
+    "slug": "scaleai"
+  },
+  {
     "name": "Braze",
     "ats": "greenhouse",
     "slug": "braze"
@@ -595,6 +140,11 @@
     "slug": "nuro"
   },
   {
+    "name": "OpenAI",
+    "ats": "ashby",
+    "slug": "openai"
+  },
+  {
     "name": "Distyl AI",
     "ats": "ashby",
     "slug": "distyl"
@@ -608,6 +158,11 @@
     "name": "Clera",
     "ats": "ashby",
     "slug": "clera"
+  },
+  {
+    "name": "Anthropic",
+    "ats": "greenhouse",
+    "slug": "anthropic"
   },
   {
     "name": "Accenture Federal Services",
@@ -685,6 +240,11 @@
     "slug": "polymarket"
   },
   {
+    "name": "Databricks",
+    "ats": "greenhouse",
+    "slug": "databricks"
+  },
+  {
     "name": "samsara",
     "ats": "greenhouse",
     "slug": "samsara"
@@ -758,6 +318,16 @@
     "name": "Figma",
     "ats": "greenhouse",
     "slug": "figma"
+  },
+  {
+    "name": "FanDuel",
+    "ats": "greenhouse",
+    "slug": "fanduel"
+  },
+  {
+    "name": "Glean",
+    "ats": "greenhouse",
+    "slug": "gleanwork"
   },
   {
     "name": "CoreWeave",
@@ -1105,6 +675,11 @@
     "slug": "allencontrolsystems"
   },
   {
+    "name": "Stripe",
+    "ats": "greenhouse",
+    "slug": "stripe"
+  },
+  {
     "name": "Atoms",
     "ats": "greenhouse",
     "slug": "atoms"
@@ -1113,6 +688,11 @@
     "name": "Axle",
     "ats": "greenhouse",
     "slug": "axle"
+  },
+  {
+    "name": "Brex",
+    "ats": "greenhouse",
+    "slug": "brex"
   },
   {
     "name": "ATOMS Careers page",
@@ -1243,6 +823,11 @@
     "name": "Maven Robotics",
     "ats": "greenhouse",
     "slug": "mavenrobotics"
+  },
+  {
+    "name": "LangChain",
+    "ats": "ashby",
+    "slug": "langchain"
   },
   {
     "name": "OpenRouter",
@@ -1380,6 +965,11 @@
     "slug": "twitch"
   },
   {
+    "name": "The Trade Desk",
+    "ats": "greenhouse",
+    "slug": "thetradedesk"
+  },
+  {
     "name": "Truveta",
     "ats": "greenhouse",
     "slug": "truveta"
@@ -1425,7 +1015,7 @@
     "slug": "6sense"
   },
   {
-    "name": "Ōura",
+    "name": "\u014cura",
     "ats": "greenhouse",
     "slug": "oura"
   },
@@ -1523,6 +1113,11 @@
     "name": "Biohub",
     "ats": "greenhouse",
     "slug": "biohub"
+  },
+  {
+    "name": "Ramp",
+    "ats": "ashby",
+    "slug": "ramp"
   },
   {
     "name": "Bland",
@@ -1623,6 +1218,11 @@
     "name": "Console",
     "ats": "ashby",
     "slug": "console"
+  },
+  {
+    "name": "Commure",
+    "ats": "ashby",
+    "slug": "commure"
   },
   {
     "name": "Collate",
@@ -2128,6 +1728,11 @@
     "name": "Rescale",
     "ats": "ashby",
     "slug": "rescale"
+  },
+  {
+    "name": "Quince",
+    "ats": "greenhouse",
+    "slug": "quince"
   },
   {
     "name": "Rhoda AI",
@@ -3050,6 +2655,11 @@
     "slug": "cottinghambutlerinsuranceservicesinc"
   },
   {
+    "name": "Coinbase",
+    "ats": "greenhouse",
+    "slug": "coinbase"
+  },
+  {
     "name": "Constellation Space",
     "ats": "ashby",
     "slug": "constellationspace"
@@ -3548,6 +3158,11 @@
     "name": "GHX",
     "ats": "greenhouse",
     "slug": "globalhealthcareexchangeinc"
+  },
+  {
+    "name": "Geotab",
+    "ats": "greenhouse",
+    "slug": "geotab"
   },
   {
     "name": "Ginkgo Bioworks Inc.",
@@ -4590,6 +4205,11 @@
     "slug": "phasev"
   },
   {
+    "name": "Perplexity",
+    "ats": "ashby",
+    "slug": "perplexity"
+  },
+  {
     "name": "PatientPoint",
     "ats": "greenhouse",
     "slug": "patientpoint"
@@ -4890,7 +4510,7 @@
     "slug": "quantco-"
   },
   {
-    "name": "Schrödinger",
+    "name": "Schr\u00f6dinger",
     "ats": "greenhouse",
     "slug": "schrdinger"
   },
@@ -5680,6 +5300,11 @@
     "slug": "zscaler"
   },
   {
+    "name": "Elevance Health",
+    "ats": "workday",
+    "careers_url": "https://elevancehealth.wd1.myworkdayjobs.com/ant"
+  },
+  {
     "name": "TTEC Digital",
     "ats": "lever",
     "slug": "ttecdigital"
@@ -5758,5 +5383,10 @@
     "name": "Amgen",
     "ats": "workday",
     "careers_url": "https://amgen.wd1.myworkdayjobs.com/careers"
+  },
+  {
+    "name": "NVIDIA",
+    "ats": "workday",
+    "careers_url": "https://nvidia.wd5.myworkdayjobs.com/nvidiaexternalcareersite"
   }
 ]

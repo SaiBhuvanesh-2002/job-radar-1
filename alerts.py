@@ -22,6 +22,7 @@ from html import escape
 from zoneinfo import ZoneInfo
 
 from ats_feed import Job
+from typing import TYPE_CHECKING
 
 log = logging.getLogger(__name__)
 
@@ -127,7 +128,7 @@ def _score_panel(bucket: str, score: int, rationale: str) -> str:
     if bucket == "UNSCORED":
         score_display = "—"
     else:
-        score_display = f'{score}<span style="font-size:18px;color:{theme["panel_fg"]};">/10</span>'
+        score_display = f'{score}<span style="font-size:18px;color:{theme["panel_fg"]};">%</span>'
     rationale_block = ""
     if rationale:
         rationale_block = (
@@ -140,11 +141,68 @@ def _score_panel(bucket: str, score: int, rationale: str) -> str:
         '<td width="200" valign="middle" align="center" '
         f'style="width:200px;background:{theme["panel_bg"]};border-radius:0 10px 10px 0;'
         'padding:18px 16px;font-family:-apple-system,Segoe UI,Roboto,sans-serif;">'
-        f'<div style="color:#ffffff;font-size:34px;font-weight:700;line-height:1;">{score_display}</div>'
+        f'<div style="color:#ffffff;font-size:30px;font-weight:700;line-height:1;">{score_display}</div>'
         f'<div style="margin-top:8px;color:{theme["accent"]};font-size:11px;font-weight:700;'
         f'letter-spacing:1px;">{theme["label"]}</div>'
         f'{rationale_block}'
         "</td>"
+    )
+
+
+def _tailor_section(job: Job) -> str:
+    """Render the tailoring block below the card — only if tailoring ran."""
+    keywords_matched: list[str] = job.get("keywords_matched") or []  # type: ignore[union-attr]
+    keywords_missing: list[str] = job.get("keywords_missing") or []  # type: ignore[union-attr]
+    bullets: list[str] = job.get("bullets_tailored") or []  # type: ignore[union-attr]
+    why: str = job.get("why_company") or ""  # type: ignore[union-attr]
+
+    if not any([keywords_matched, keywords_missing, bullets, why]):
+        return ""
+
+    parts: list[str] = []
+
+    if keywords_matched or keywords_missing:
+        chips_html = ""
+        for kw in keywords_matched:
+            chips_html += _chip(escape(kw), bg="#dcfce7", fg="#166534")  # green — match
+            chips_html += "&nbsp;"
+        for kw in keywords_missing:
+            chips_html += _chip(escape(kw), bg="#fee2e2", fg="#991b1b")  # red — missing
+            chips_html += "&nbsp;"
+        parts.append(
+            '<div style="margin-bottom:10px;">'
+            '<div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;color:#6b7280;margin-bottom:6px;">Keywords</div>'
+            f'{chips_html}'
+            "</div>"
+        )
+
+    if bullets:
+        bullet_html = "".join(
+            f'<li style="margin-bottom:5px;color:#374151;font-size:13px;">{escape(b)}</li>'
+            for b in bullets
+        )
+        parts.append(
+            '<div style="margin-bottom:12px;">'
+            '<div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;color:#6b7280;margin-bottom:6px;">Tailored bullets</div>'
+            f'<ul style="margin:0;padding-left:18px;">{bullet_html}</ul>'
+            "</div>"
+        )
+
+    if why:
+        parts.append(
+            '<div>'
+            '<div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;color:#6b7280;margin-bottom:6px;">Why this role — draft</div>'
+            f'<div style="color:#374151;font-size:13px;line-height:1.6;font-style:italic;">{escape(why)}</div>'
+            "</div>"
+        )
+
+    inner = "".join(parts)
+    return (
+        '<div style="margin:-4px 0 16px 0;background:#f9fafb;border:1px solid #e5e7eb;'
+        'border-top:none;border-radius:0 0 10px 10px;padding:16px 20px;'
+        'font-family:-apple-system,Segoe UI,Roboto,sans-serif;">'
+        f'{inner}'
+        "</div>"
     )
 
 
@@ -228,14 +286,64 @@ def _bucket_summary(jobs: list[Job]) -> str:
     return " · ".join(parts)
 
 
-def build_digest_html(jobs: list[Job]) -> str:
+def _tracker_summary_html(summary: dict[str, int]) -> str:
+    """Render the 7-day tracker summary bar — shown at top of digest when provided."""
+    if not summary:
+        return ""
+    total = sum(summary.values())
+    status_order = ["applied", "viewed", "replied", "interview", "offer", "rejected"]
+    status_label = {
+        "applied": "Applied",
+        "viewed": "Viewed",
+        "replied": "Replied",
+        "interview": "Interview",
+        "offer": "Offer",
+        "rejected": "Rejected",
+    }
+    status_color = {
+        "applied":   ("#dbeafe", "#1d4ed8"),
+        "viewed":    ("#e0f2fe", "#0369a1"),
+        "replied":   ("#fef3c7", "#92400e"),
+        "interview": ("#dcfce7", "#15803d"),
+        "offer":     ("#f0fdf4", "#166534"),
+        "rejected":  ("#fee2e2", "#991b1b"),
+    }
+    cells = ""
+    for s in status_order:
+        n = summary.get(s, 0)
+        if n == 0:
+            continue
+        bg, fg = status_color.get(s, ("#f3f4f6", "#374151"))
+        cells += (
+            f'<td style="padding:0 12px 0 0;vertical-align:top;text-align:center;">'
+            f'<div style="background:{bg};color:{fg};border-radius:8px;padding:8px 14px;'
+            f'font-family:-apple-system,Segoe UI,Roboto,sans-serif;">'
+            f'<div style="font-size:22px;font-weight:700;">{n}</div>'
+            f'<div style="font-size:11px;font-weight:600;margin-top:2px;">{status_label.get(s, s)}</div>'
+            f'</div></td>'
+        )
+    if not cells:
+        return ""
+    return (
+        '<div style="margin-bottom:20px;padding:16px 20px;background:#ffffff;'
+        'border:1px solid #e5e7eb;border-radius:10px;">'
+        '<div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;'
+        'font-weight:700;color:#6b7280;margin-bottom:12px;">Last 7 days tracker</div>'
+        f'<table role="presentation" cellpadding="0" cellspacing="0" border="0">'
+        f'<tr>{cells}</tr></table>'
+        '</div>'
+    )
+
+
+def build_digest_html(jobs: list[Job], tracker: dict[str, int] | None = None) -> str:
     # Caller is expected to have already sorted with scorer.sort_key.
-    cards = "".join(_card(j) for j in jobs)
+    cards = "".join(_card(j) + _tailor_section(j) for j in jobs)
     summary = _bucket_summary(jobs)
     summary_line = (
         f'<div style="color:#6b7280;font-size:13px;margin-bottom:18px;">{escape(summary)}</div>'
         if summary else ""
     )
+    tracker_html = _tracker_summary_html(tracker or {})
     return f"""<!doctype html>
 <html>
 <body style="margin:0;padding:0;background:#f3f4f6;font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#111827;">
@@ -246,6 +354,7 @@ def build_digest_html(jobs: list[Job]) -> str:
     <div style="color:#9ca3af;font-size:11px;margin-bottom:18px;">
       Generated {_format_now()}
     </div>
+    {tracker_html}
     {cards}
   </div>
 </body>
@@ -261,7 +370,7 @@ def build_digest_text(jobs: list[Job]) -> str:
     for j in jobs:
         bucket = (j.get("bucket") or "UNSCORED").upper()
         score = j.get("score") or 0
-        tag = f"[{bucket} {score}/10]" if bucket != "UNSCORED" else "[UNSCORED]"
+        tag = f"[{bucket} {score}%]" if bucket != "UNSCORED" else "[UNSCORED]"
         flag = " [REMOTE]" if j["remote"] else ""
         lines.append(f"- {tag} {j['company']}: {j['title']} ({j['location'] or '—'}){flag}")
         rationale = j.get("rationale") or ""
@@ -292,7 +401,7 @@ def _smtp_send(subject: str, html_body: str, text_body: str) -> None:
     log.info("sent email '%s' to %s", subject, to)
 
 
-def send_digest(jobs: list[Job]) -> None:
+def send_digest(jobs: list[Job], tracker: dict[str, int] | None = None) -> None:
     if not jobs:
         log.info("no new jobs; skipping digest email")
         return
@@ -300,7 +409,7 @@ def send_digest(jobs: list[Job]) -> None:
     summary = _bucket_summary(jobs)
     subject_tail = f" — {summary}" if summary else ""
     subject = f"Job Radar — {len(jobs)} new role(s){subject_tail} — {when}"
-    _smtp_send(subject, build_digest_html(jobs), build_digest_text(jobs))
+    _smtp_send(subject, build_digest_html(jobs, tracker=tracker), build_digest_text(jobs))
 
 
 def send_failure(error: str, run_url: str | None = None) -> None:

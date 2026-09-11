@@ -70,13 +70,13 @@ def load_resume(repo_root: Path | None = None) -> str | None:
 
 _PROMPT_TEMPLATE = """\
 You are ranking job postings against a candidate's resume. For EACH job, return:
-- score: integer 1-10 (10 = perfect fit, 1 = clearly wrong role for this candidate)
+- score: integer 0-100 (100 = perfect fit, 0 = clearly wrong role for this candidate)
 - rationale: ONE sentence, <=140 chars, citing concrete reasons (e.g. "Strong: 3+ yrs LLM infra + Python match" or "Mismatch: requires 7+ yrs and TS frontend")
 
 Score guide:
-- 8-10 (HIGH): role title, seniority, AND tech stack all align with the resume
-- 5-7  (MED):  role/seniority match but stack is partial, OR strong stack but adjacent role
-- 1-4  (LOW):  major mismatch on seniority, stack, or role family
+- 75-100 (HIGH): role title, seniority, AND tech stack all align with the resume
+- 50-74  (MED):  role/seniority match but stack is partial, OR strong stack but adjacent role
+- 0-49   (LOW):  major mismatch on seniority, stack, or role family
 
 Cite real resume experience in rationales, not generic phrases. The candidate has ~4 yrs AI/ML experience, targets Data Scientist / AI Engineer IC roles in the US, requires H1B sponsorship, and is open to remote/hybrid — do NOT penalize US-based or Remote roles; deprioritize roles that explicitly exclude sponsorship.
 
@@ -105,9 +105,9 @@ def _format_jobs_block(jobs: list[Job]) -> str:
 
 
 def _bucket_for(score: int) -> str:
-    if score >= 8:
+    if score >= 75:
         return "HIGH"
-    if score >= 5:
+    if score >= 50:
         return "MED"
     return "LOW"
 
@@ -241,7 +241,7 @@ def score_jobs(
                 scored.append(_unscored(j))
                 bucket_counts["UNSCORED"] += 1
                 continue
-            score = max(1, min(10, score))
+            score = max(0, min(100, score))
             bucket = _bucket_for(score)
             sj: ScoredJob = {
                 **j,

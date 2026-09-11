@@ -1,4 +1,5 @@
-"""Fetch + normalize job postings from Lever, Greenhouse, Ashby, and Workday."""
+"""Fetch + normalize job postings from Lever, Greenhouse, Ashby, Workday,
+BambooHR, iCIMS, Workable, JazzHR, and Rippling."""
 from __future__ import annotations
 
 import logging
@@ -101,6 +102,10 @@ _WORKDAY_PATH_CITY_RE = re.compile(r"^/job/([^/]+)/", re.IGNORECASE)
 # offsets 1000+ while showing 30+d-old jobs at offset 500, so the
 # date-descending early-stop in fetch_workday would lose fresh roles here.
 _WORKDAY_UNSORTED_TENANTS = frozenset({"accenture"})
+
+# Hard cap — boards like CVS report totals of 15k–20k+ retail roles. Past this
+# offset we stop; early-stop on stale pages usually fires sooner.
+_WORKDAY_MAX_OFFSET = 2000
 
 # Workday's listing API returns a relative `postedOn` string like
 # "Posted Today", "Posted Yesterday", "Posted 5 Days Ago", "Posted 30+ Days Ago".
@@ -218,9 +223,15 @@ def fetch_workday(careers_url: str) -> list[dict[str, Any]]:
             total = data.get("total") or 0
         if offset >= total:
             break
+        if offset >= _WORKDAY_MAX_OFFSET:
+            log.info(
+                "workday/%s/%s hit max offset %d (total=%s) — stopping",
+                tenant, board, _WORKDAY_MAX_OFFSET, total,
+            )
+            break
         # Most Workday tenants sort by post date descending: once we hit a
         # full page of "Posted 30+ Days Ago" everything past it is older
-        # too, so further pages have no chance of clearing the 7d recency
+        # too, so further pages have no chance of clearing the recency
         # filter. Skipped for tenants in _WORKDAY_UNSORTED_TENANTS.
         if allow_early_stop and _workday_page_is_all_stale(postings):
             log.info(
@@ -232,11 +243,142 @@ def fetch_workday(careers_url: str) -> list[dict[str, Any]]:
     return all_postings
 
 
+# ---------------------------------------------------------------------------
+# BambooHR — public JSON feed at /careers/v1/ippostings
+# ---------------------------------------------------------------------------
+
+def fetch_bamboohr(slug: str) -> list[dict[str, Any]]:
+    """Public BambooHR job feed (no auth required).
+
+    slug = subdomain, e.g. "stripe" → https://stripe.bamboohr.com/careers/v1/ippostings
+    """
+    url = f"https://{slug}.bamboohr.com/careers/v1/ippostings"
+    r = SESSION.get(url, timeout=REQUEST_TIMEOUT)
+    log.info("bamboohr/%s -> %s (%d bytes)", slug, r.status_code, len(r.content))
+    r.raise_for_status()
+    data = r.json()
+    # Response is either a list or {"result": [...]}
+    jobs = data if isinstance(data, list) else data.get("result", [])
+    return [{"_ats": "bamboohr", "_company": slug, **j} for j in jobs]
+
+
+# ---------------------------------------------------------------------------
+# iCIMS — public jobs feed
+# ---------------------------------------------------------------------------
+
+def fetch_icims(slug: str) -> list[dict[str, Any]]:
+    """Public iCIMS job listing (no auth required).
+
+    slug = subdomain prefix, e.g. "stripe" → https://careers-stripe.icims.com/jobs/search?...
+    The feed endpoint returns JSON when Accept: application/json is sent.
+    """
+    url = f"https://careers-{slug}.icims.com/jobs/search"
+    params = {
+        "in_iframe": "1",
+        "hashed": "-435740538",
+        "mobile": "false",
+        "searchCategory": "",
+        "searchKeyword": "",
+        "searchLocation": "",
+        "searchLocationType": "city",
+        "searchCountry": "",
+        "searchZip": "",
+        "searchRadius": "30",
+        "searchPageSize": "100",
+        "searchPage": "1",
+        "cf": "1",
+    }
+    headers = {"Accept": "application/json", **SESSION.headers}
+    r = SESSION.get(url, params=params, headers=headers, timeout=REQUEST_TIMEOUT)
+    log.info("icims/%s -> %s (%d bytes)", slug, r.status_code, len(r.content))
+    if r.status_code == 404:
+        # Some tenants use external- prefix instead of careers- prefix
+        url2 = f"https://external-{slug}.icims.com/jobs/search"
+        r = SESSION.get(url2, params=params, headers=headers, timeout=REQUEST_TIMEOUT)
+        log.info("icims/%s (external) -> %s (%d bytes)", slug, r.status_code, len(r.content))
+    r.raise_for_status()
+    try:
+        data = r.json()
+    except Exception:
+        return []
+    jobs = data.get("searchResults", []) if isinstance(data, dict) else []
+    return [{"_ats": "icims", "_company": slug, **j} for j in jobs]
+
+
+# ---------------------------------------------------------------------------
+# Workable — public jobs API v1
+# ---------------------------------------------------------------------------
+
+def fetch_workable(slug: str) -> list[dict[str, Any]]:
+    """Public Workable job board API.
+
+    slug = subdomain, e.g. "stripe" → https://apply.workable.com/api/v1/widget/accounts/stripe/jobs
+    """
+    url = f"https://apply.workable.com/api/v1/widget/accounts/{slug}/jobs"
+    r = SESSION.get(url, timeout=REQUEST_TIMEOUT)
+    log.info("workable/%s -> %s (%d bytes)", slug, r.status_code, len(r.content))
+    r.raise_for_status()
+    data = r.json()
+    jobs = data.get("results", []) if isinstance(data, dict) else []
+    return [{"_ats": "workable", "_company": slug, **j} for j in jobs]
+
+
+# ---------------------------------------------------------------------------
+# JazzHR — public jobs feed
+# ---------------------------------------------------------------------------
+
+def fetch_jazzhr(slug: str) -> list[dict[str, Any]]:
+    """Public JazzHR job feed (no auth required).
+
+    slug = subdomain, e.g. "stripe" → https://stripe.applytojob.com/apply
+    """
+    url = f"https://{slug}.applytojob.com/apply/jobs"
+    r = SESSION.get(url, timeout=REQUEST_TIMEOUT)
+    log.info("jazzhr/%s -> %s (%d bytes)", slug, r.status_code, len(r.content))
+    r.raise_for_status()
+    data = r.json()
+    jobs = data if isinstance(data, list) else data.get("jobs", [])
+    return [{"_ats": "jazzhr", "_company": slug, **j} for j in jobs]
+
+
+# ---------------------------------------------------------------------------
+# Rippling — public ATS job listing
+# ---------------------------------------------------------------------------
+
+def fetch_rippling(slug: str) -> list[dict[str, Any]]:
+    """Public Rippling ATS job listing.
+
+    slug = path slug, e.g. "stripe-careers" →
+        POST https://api.rippling.com/platform/api/ats/v1/job_listings/
+    The widget endpoint returns JSON without auth.
+    """
+    url = f"https://ats.rippling.com/{slug}/jobs/listing"
+    r = SESSION.get(url, timeout=REQUEST_TIMEOUT)
+    log.info("rippling/%s -> %s (%d bytes)", slug, r.status_code, len(r.content))
+    # Rippling renders HTML by default; try the JSON API endpoint
+    api_url = f"https://api.rippling.com/platform/api/ats/v1/job_listings/?company_slug={slug}"
+    r2 = SESSION.get(api_url, timeout=REQUEST_TIMEOUT)
+    log.info("rippling-api/%s -> %s (%d bytes)", slug, r2.status_code, len(r2.content))
+    if r2.ok:
+        try:
+            data = r2.json()
+            jobs = data.get("results", []) if isinstance(data, dict) else data
+            return [{"_ats": "rippling", "_company": slug, **j} for j in jobs]
+        except Exception:
+            pass
+    return []
+
+
 ATS_FETCHERS: dict[str, Callable[[str], list[dict[str, Any]]]] = {
     "lever": fetch_lever,
     "greenhouse": fetch_greenhouse,
     "ashby": fetch_ashby,
     "workday": fetch_workday,
+    "bamboohr": fetch_bamboohr,
+    "icims": fetch_icims,
+    "workable": fetch_workable,
+    "jazzhr": fetch_jazzhr,
+    "rippling": fetch_rippling,
 }
 
 
@@ -339,6 +481,117 @@ def normalize_job(raw: dict[str, Any]) -> Job | None:
                 url=job_url,
                 remote="remote" in location.lower(),
                 posted_at=_parse_workday_posted_on(raw.get("postedOn")),
+            )
+        if ats == "bamboohr":
+            # BambooHR public feed fields: id, jobOpeningName, jobOpeningStatus,
+            # location, department, datePosted, jobUrl (constructed from slug + id)
+            location = raw.get("location", {})
+            loc_str = (
+                location.get("city", "") if isinstance(location, dict) else str(location)
+            ) or ""
+            state = (location.get("state", "") if isinstance(location, dict) else "") or ""
+            if state and loc_str:
+                loc_str = f"{loc_str}, {state}"
+            job_id = str(raw.get("id", ""))
+            job_url = (
+                raw.get("jobUrl")
+                or f"https://{company_slug}.bamboohr.com/careers/{job_id}"
+            )
+            posted = raw.get("datePosted") or raw.get("updatedDate")
+            return Job(
+                id=job_id,
+                ats="bamboohr",
+                company=company_slug,
+                title=raw.get("jobOpeningName") or raw.get("title", ""),
+                location=loc_str,
+                team=raw.get("department", {}).get("label", "") if isinstance(raw.get("department"), dict) else raw.get("department", "") or "",
+                description=(raw.get("description") or "")[:2000],
+                url=job_url,
+                remote="remote" in loc_str.lower(),
+                posted_at=posted,
+            )
+        if ats == "icims":
+            # iCIMS search result fields: id, jobtitle, joblocation, jobposting, jobtype
+            job_id = str(raw.get("id", ""))
+            location_data = raw.get("joblocation") or {}
+            loc_str = (
+                location_data.get("formatted_address", "")
+                if isinstance(location_data, dict)
+                else str(location_data)
+            ) or ""
+            portal = f"careers-{company_slug}.icims.com"
+            job_url = raw.get("job_url") or f"https://{portal}/jobs/{job_id}/job"
+            return Job(
+                id=job_id,
+                ats="icims",
+                company=company_slug,
+                title=raw.get("jobtitle", ""),
+                location=loc_str,
+                team=raw.get("joblocation", {}).get("department", "") if isinstance(raw.get("joblocation"), dict) else "",
+                description=(raw.get("jobdescription") or "")[:2000],
+                url=job_url,
+                remote="remote" in loc_str.lower(),
+                posted_at=raw.get("date_posted") or raw.get("posting_date"),
+            )
+        if ats == "workable":
+            # Workable widget API: shortcode, title, city, state, country,
+            # remote, department, published_on, application_url
+            location_parts = [
+                raw.get("city") or "",
+                raw.get("state") or "",
+                raw.get("country") or "",
+            ]
+            loc_str = ", ".join(p for p in location_parts if p)
+            return Job(
+                id=str(raw.get("shortcode", "")),
+                ats="workable",
+                company=company_slug,
+                title=raw.get("title", ""),
+                location=loc_str,
+                team=raw.get("department") or "",
+                description=(raw.get("description") or raw.get("full_description") or "")[:2000],
+                url=raw.get("application_url") or raw.get("url") or f"https://apply.workable.com/{company_slug}/j/{raw.get('shortcode','')}",
+                remote=bool(raw.get("remote")) or "remote" in loc_str.lower(),
+                posted_at=raw.get("published_on"),
+            )
+        if ats == "jazzhr":
+            # JazzHR apply feed: id, title, city, state, country_id, department, open_date, apply_url
+            city = raw.get("city") or ""
+            state = raw.get("state") or ""
+            loc_str = f"{city}, {state}".strip(", ") if (city or state) else ""
+            return Job(
+                id=str(raw.get("id", "")),
+                ats="jazzhr",
+                company=company_slug,
+                title=raw.get("title", ""),
+                location=loc_str,
+                team=raw.get("department") or raw.get("type") or "",
+                description=(raw.get("description") or "")[:2000],
+                url=raw.get("apply_url") or raw.get("applyUrl") or "",
+                remote="remote" in loc_str.lower() or "remote" in (raw.get("title") or "").lower(),
+                posted_at=raw.get("open_date"),
+            )
+        if ats == "rippling":
+            # Rippling ATS API fields: id, title, location, department, createdAt, applicationUrl
+            location_data = raw.get("location") or {}
+            loc_str = (
+                location_data.get("locationName", "")
+                if isinstance(location_data, dict)
+                else str(location_data)
+            ) or ""
+            dept = raw.get("department") or {}
+            team_str = dept.get("name", "") if isinstance(dept, dict) else str(dept) or ""
+            return Job(
+                id=str(raw.get("id", "")),
+                ats="rippling",
+                company=company_slug,
+                title=raw.get("title", "") or raw.get("jobTitle", ""),
+                location=loc_str,
+                team=team_str,
+                description=(raw.get("description") or raw.get("jobDescription") or "")[:2000],
+                url=raw.get("applicationUrl") or raw.get("applyUrl") or f"https://ats.rippling.com/{company_slug}/jobs",
+                remote=bool(raw.get("isRemote")) or "remote" in loc_str.lower(),
+                posted_at=raw.get("createdAt") or raw.get("publishedAt"),
             )
         log.warning("unknown ats: %s", ats)
         return None

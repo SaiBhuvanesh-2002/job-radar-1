@@ -22,8 +22,9 @@ from dotenv import load_dotenv
 import alerts
 import filters
 import scorer
+import tailor
 from ats_feed import Job, fetch_all_jobs, normalize_job
-from dedup import filter_unseen, mark_seen, open_db, row_count
+from dedup import filter_unseen, mark_seen, open_db, row_count, tracker_summary
 
 logging.basicConfig(
     level=os.environ.get("LOG_LEVEL", "INFO"),
@@ -136,9 +137,13 @@ def run(dry_run: bool = False, seed: bool = False) -> int:
         scored = scorer.score_jobs(recent, resume=resume)
         scored.sort(key=scorer.sort_key)
 
+        # v3: tailor HIGH/MED jobs — add keyword gaps, rewritten bullets, why-company draft.
+        # Falls through silently if no resume or API key.
+        tailored = tailor.tailor_jobs(scored, resume=resume)
+
         if dry_run:
-            log.info("dry-run: would email %d jobs", len(scored))
-            for j in scored:
+            log.info("dry-run: would email %d jobs", len(tailored))
+            for j in tailored:
                 log.info(
                     "  - [%s %s] %s | %s | %s",
                     j.get("bucket", "UNSCORED"),
@@ -147,8 +152,11 @@ def run(dry_run: bool = False, seed: bool = False) -> int:
                 )
             return 0
 
-        if scored:
-            alerts.send_digest(scored)
+        # Fetch 7-day tracker summary to show in email header.
+        tsummary = tracker_summary(conn, days=7)
+
+        if tailored:
+            alerts.send_digest(tailored, tracker=tsummary)
 
         # Persist ALL new jobs (recent or not) so we don't re-evaluate them later.
         mark_seen(conn, new_jobs)

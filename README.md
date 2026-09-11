@@ -94,6 +94,20 @@ Rerun `python job_monitor.py --dry-run` to see how your changes affect today's b
 
 ## Adding companies
 
+**Active list:** [companies.json](companies.json) — what GitHub Actions polls (~130 boards).
+
+**Reference catalog:** [companies_full.json](companies_full.json) — ~15k boards for discovery only; the pipeline never loads this file.
+
+```bash
+# Probe candidates not yet in companies.json (keyword + limit keeps it fast)
+python verify_companies.py --file companies_full.json --only-new --filter 'ai|ml|health' --limit 50
+
+# Emit JSON snippet of working rows to paste into companies.json
+python verify_companies.py --file companies_full.json --only-new --filter cohere --json
+```
+
+Only add rows that return jobs. Do **not** drop the entire 15k-file into the active list — a full run would exceed the 30-minute Actions timeout.
+
 Add entries to [companies.json](companies.json). For each new company, run `python verify_companies.py` first — it probes the ATS endpoint and reports companies that return 0 jobs or 404. Don't commit unverified entries; the user-facing memory of which slugs work where is `companies.json` itself.
 
 ---

@@ -31,7 +31,24 @@ CREATE TABLE IF NOT EXISTS seen_jobs (
   first_seen_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_first_seen ON seen_jobs(first_seen_at);
+
+CREATE TABLE IF NOT EXISTS applied_jobs (
+  hash        TEXT PRIMARY KEY,
+  ats         TEXT NOT NULL,
+  company     TEXT NOT NULL,
+  title       TEXT NOT NULL,
+  url         TEXT NOT NULL,
+  score       INTEGER,
+  bucket      TEXT,
+  applied_at  TEXT NOT NULL,
+  status      TEXT NOT NULL DEFAULT 'applied',
+  notes       TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_applied_at ON applied_jobs(applied_at);
 """
+
+# Valid application statuses (mirrors Tsenta's tracker states)
+TRACKER_STATUSES = frozenset({"applied", "viewed", "replied", "interview", "offer", "rejected", "skipped"})
 
 
 def job_hash(job: Job) -> str:
@@ -94,3 +111,95 @@ def mark_seen(conn: sqlite3.Connection, jobs: Iterable[Job]) -> int:
 
 def row_count(conn: sqlite3.Connection) -> int:
     return conn.execute("SELECT COUNT(*) FROM seen_jobs").fetchone()[0]
+
+
+# ---------------------------------------------------------------------------
+# Application tracker
+# ---------------------------------------------------------------------------
+
+def track_application(
+    conn: sqlite3.Connection,
+    job: Job,
+    status: str = "applied",
+    notes: str = "",
+) -> bool:
+    """Record that the user applied to a job.
+
+    Returns True if inserted (new), False if hash already existed.
+    Status can be any value from TRACKER_STATUSES.
+    """
+    now = datetime.now(timezone.utc).isoformat()
+    h = job_hash(job)
+    try:
+        conn.execute(
+            "INSERT INTO applied_jobs "
+            "(hash, ats, company, title, url, score, bucket, applied_at, status, notes) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                h,
+                job["ats"],
+                job["company"],
+                job["title"],
+                job["url"],
+                job.get("score"),  # type: ignore[union-attr]
+                job.get("bucket"),  # type: ignore[union-attr]
+                now,
+                status,
+                notes or "",
+            ),
+        )
+        log.info("tracker: recorded '%s' for %s/%s", status, job["company"], job["title"])
+        return True
+    except sqlite3.IntegrityError:
+        log.debug("tracker: %s/%s already tracked", job["company"], job["title"])
+        return False
+
+
+def update_application_status(
+    conn: sqlite3.Connection,
+    job: Job,
+    status: str,
+    notes: str = "",
+) -> bool:
+    """Update status of an already-tracked application. Returns True if found."""
+    h = job_hash(job)
+    cur = conn.execute(
+        "UPDATE applied_jobs SET status=?, notes=? WHERE hash=?",
+        (status, notes, h),
+    )
+    return cur.rowcount > 0
+
+
+def tracker_summary(
+    conn: sqlite3.Connection,
+    days: int = 7,
+) -> dict[str, int]:
+    """Return counts per status for applications tracked in the last `days` days."""
+    cutoff = (
+        datetime.now(timezone.utc).replace(microsecond=0)
+        - __import__("datetime").timedelta(days=days)
+    ).isoformat()
+    cur = conn.execute(
+        "SELECT status, COUNT(*) FROM applied_jobs WHERE applied_at >= ? GROUP BY status",
+        (cutoff,),
+    )
+    return {row[0]: row[1] for row in cur.fetchall()}
+
+
+def recent_applications(
+    conn: sqlite3.Connection,
+    days: int = 7,
+    limit: int = 50,
+) -> list[dict]:
+    """Return recent applied jobs as dicts, newest first."""
+    cutoff = (
+        datetime.now(timezone.utc).replace(microsecond=0)
+        - __import__("datetime").timedelta(days=days)
+    ).isoformat()
+    cur = conn.execute(
+        "SELECT company, title, url, score, bucket, applied_at, status, notes "
+        "FROM applied_jobs WHERE applied_at >= ? ORDER BY applied_at DESC LIMIT ?",
+        (cutoff, limit),
+    )
+    cols = ["company", "title", "url", "score", "bucket", "applied_at", "status", "notes"]
+    return [dict(zip(cols, row)) for row in cur.fetchall()]

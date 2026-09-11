@@ -14,12 +14,17 @@ dependencies = [
 dev = [
     "pytest>=8.0",
 ]
+mcp = [
+    "mcp[cli]>=1.0",
+]
 
 [project.scripts]
 job-radar = "job_monitor:main"
+job-radar-mcp = "mcp_server:main"
+job-radar-check-resume = "check_resume:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
 [tool.setuptools]
-py-modules = ["ats_feed", "dedup", "alerts", "job_monitor", "verify_companies", "scorer"]
+py-modules = ["ats_feed", "dedup", "alerts", "job_monitor", "verify_companies", "scorer", "tailor", "check_resume", "mcp_server"]

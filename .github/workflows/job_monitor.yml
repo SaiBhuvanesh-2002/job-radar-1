@@ -2,7 +2,8 @@ name: Job Monitor
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # every 30 minutes (best-effort; GH delays during load)
+    # Every 2 hours — full ~1100-company runs take longer than 30m; avoid queue pile-up.
+    - cron: "0 */2 * * *"
   workflow_dispatch:
     inputs:
       mode:
@@ -22,7 +23,9 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # GitHub-hosted max is 360. ~1152 mostly Greenhouse/Ashby boards usually
+    # finish well under this; headroom covers slow Workday tenants.
+    timeout-minutes: 180
     env:
       GMAIL_USER: ${{ secrets.GMAIL_USER }}
       GMAIL_APP_PASS: ${{ secrets.GMAIL_APP_PASS }}

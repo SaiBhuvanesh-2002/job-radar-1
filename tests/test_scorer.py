@@ -20,12 +20,12 @@ def _job(id_: str = "1", title: str = "ML Engineer") -> dict:
 
 
 def test_bucket_thresholds():
-    assert scorer._bucket_for(10) == "HIGH"
-    assert scorer._bucket_for(8) == "HIGH"
-    assert scorer._bucket_for(7) == "MED"
-    assert scorer._bucket_for(5) == "MED"
-    assert scorer._bucket_for(4) == "LOW"
-    assert scorer._bucket_for(1) == "LOW"
+    assert scorer._bucket_for(100) == "HIGH"
+    assert scorer._bucket_for(75) == "HIGH"
+    assert scorer._bucket_for(74) == "MED"
+    assert scorer._bucket_for(50) == "MED"
+    assert scorer._bucket_for(49) == "LOW"
+    assert scorer._bucket_for(0) == "LOW"
 
 
 def test_empty_jobs_returns_empty():
@@ -53,15 +53,15 @@ def test_full_scoring_path():
         assert "ML Engineer" in prompt
         assert "Data Scientist" in prompt
         return json.dumps([
-            {"index": 0, "score": 9, "rationale": "Strong PyTorch + RAG match"},
-            {"index": 1, "score": 4, "rationale": "Mismatch: heavy stats focus"},
+            {"index": 0, "score": 90, "rationale": "Strong PyTorch + RAG match"},
+            {"index": 1, "score": 40, "rationale": "Mismatch: heavy stats focus"},
         ])
 
     out = scorer.score_jobs(jobs, resume="resume text", api_key="fake", call_fn=fake_call)
     assert len(out) == 2
-    assert out[0]["score"] == 9 and out[0]["bucket"] == "HIGH"
+    assert out[0]["score"] == 90 and out[0]["bucket"] == "HIGH"
     assert "PyTorch" in out[0]["rationale"]
-    assert out[1]["score"] == 4 and out[1]["bucket"] == "LOW"
+    assert out[1]["score"] == 40 and out[1]["bucket"] == "LOW"
 
 
 def test_malformed_response_falls_back_unscored():
@@ -93,11 +93,11 @@ def test_transient_503_retried_then_succeeds(monkeypatch):
         attempts["n"] += 1
         if attempts["n"] == 1:
             raise RuntimeError("503 UNAVAILABLE high demand")
-        return json.dumps([{"index": 0, "score": 8, "rationale": "great fit"}])
+        return json.dumps([{"index": 0, "score": 80, "rationale": "great fit"}])
 
     out = scorer.score_jobs(jobs, resume="r", api_key="k", call_fn=flaky_call)
     assert attempts["n"] == 2  # retried once
-    assert out[0]["bucket"] == "HIGH" and out[0]["score"] == 8
+    assert out[0]["bucket"] == "HIGH" and out[0]["score"] == 80
 
 
 def test_permanent_error_not_retried():
@@ -118,11 +118,11 @@ def test_missing_index_in_response_unscored_for_that_job():
 
     def fake_call(prompt, model, api_key):
         # Only return job 1's score, drop job 0
-        return json.dumps([{"index": 1, "score": 7, "rationale": "ok fit"}])
+        return json.dumps([{"index": 1, "score": 60, "rationale": "ok fit"}])
 
     out = scorer.score_jobs(jobs, resume="r", api_key="k", call_fn=fake_call)
     assert out[0]["bucket"] == "UNSCORED"
-    assert out[1]["score"] == 7 and out[1]["bucket"] == "MED"
+    assert out[1]["score"] == 60 and out[1]["bucket"] == "MED"
 
 
 def test_score_clamped_to_range():
@@ -130,13 +130,13 @@ def test_score_clamped_to_range():
 
     def fake_call(prompt, model, api_key):
         return json.dumps([
-            {"index": 0, "score": 99, "rationale": "x"},
+            {"index": 0, "score": 150, "rationale": "x"},
             {"index": 1, "score": -5, "rationale": "y"},
         ])
 
     out = scorer.score_jobs(jobs, resume="r", api_key="k", call_fn=fake_call)
-    assert out[0]["score"] == 10
-    assert out[1]["score"] == 1
+    assert out[0]["score"] == 100
+    assert out[1]["score"] == 0
 
 
 def test_batching_chunks_correctly():
@@ -151,25 +151,24 @@ def test_batching_chunks_correctly():
                 prompt.count("[2] company") + prompt.count("[3] company") + \
                 prompt.count("[4] company")
         return json.dumps([
-            {"index": i, "score": 5, "rationale": "med"} for i in range(count)
+            {"index": i, "score": 55, "rationale": "med"} for i in range(count)
         ])
 
     out = scorer.score_jobs(jobs, resume="r", api_key="k", call_fn=fake_call)
     assert len(out) == 12
     assert call_count["n"] == 3  # 5 + 5 + 2
-    assert all(j["score"] == 5 for j in out)
+    assert all(j["score"] == 55 for j in out)
 
 
 def test_sort_key_orders_high_first_unscored_last():
     jobs = [
         {**_job("a"), "score": 0, "bucket": "UNSCORED", "rationale": ""},
-        {**_job("b"), "score": 9, "bucket": "HIGH", "rationale": ""},
-        {**_job("c"), "score": 6, "bucket": "MED", "rationale": ""},
-        {**_job("d"), "score": 2, "bucket": "LOW", "rationale": ""},
+        {**_job("b"), "score": 90, "bucket": "HIGH", "rationale": ""},
+        {**_job("c"), "score": 60, "bucket": "MED", "rationale": ""},
+        {**_job("d"), "score": 20, "bucket": "LOW", "rationale": ""},
     ]
     jobs.sort(key=scorer.sort_key)
     assert [j["id"] for j in jobs] == ["b", "c", "d", "a"]
-
 
 def test_load_resume_env_wins(monkeypatch, tmp_path):
     monkeypatch.setenv("RESUME_CONTENT", "from env")
